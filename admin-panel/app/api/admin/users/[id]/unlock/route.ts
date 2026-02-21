@@ -2,12 +2,13 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth, logActivity } from '@/lib/apiAuth'
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { user, error } = await requireAuth('EDIT_USER')
     if (error) return error
 
     try {
-        const targetId = parseInt(params.id)
+        const { id } = await params
+        const targetId = parseInt(id)
 
         const targetUser = await prisma.user.update({
             where: { id: targetId },

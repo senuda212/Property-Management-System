@@ -2,14 +2,15 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth, logActivity } from '@/lib/apiAuth'
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { user, error } = await requireAuth('UPDATE_INQUIRY')
     if (error) return error
 
     try {
+        const { id } = await params
         const body = await req.json()
         const inquiry = await prisma.inquiry.update({
-            where: { id: parseInt(params.id) },
+            where: { id: parseInt(id) },
             data: { status: body.status }
         })
 
@@ -21,18 +22,19 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { user, error } = await requireAuth('DELETE_INQUIRY')
     if (error) return error
 
     try {
+        const { id } = await params
         const inquiry = await prisma.inquiry.findUnique({
-            where: { id: parseInt(params.id) },
+            where: { id: parseInt(id) },
             select: { fullName: true }
         })
 
         await prisma.inquiry.delete({
-            where: { id: parseInt(params.id) }
+            where: { id: parseInt(id) }
         })
 
         if (inquiry) {

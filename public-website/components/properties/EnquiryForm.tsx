@@ -51,7 +51,7 @@ export default function EnquiryForm({ propertyId, propertyTitle }: EnquiryFormPr
     }
 
     return (
-        <div style={{ backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 8px 40px rgba(11,31,58,0.12)', borderTop: '4px solid #FF6B1A', padding: '28px', position: 'sticky', top: '100px' }}>
+        <div style={{ backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 8px 40px rgba(11,31,58,0.12)', borderTop: '4px solid #FF6B1A', padding: '28px', position: 'sticky', top: '100px' }} className="enquiry-form">
             <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '22px', fontWeight: 700, color: '#0B1F3A', marginBottom: '20px' }}>Book a Viewing</h3>
 
             {success ? (
@@ -117,30 +117,38 @@ export default function EnquiryForm({ propertyId, propertyTitle }: EnquiryFormPr
 
             <div style={{ borderTop: '1px solid #E8ECF0', paddingTop: '20px', marginTop: '20px' }}>
                 <a
-                    href={`https://wa.me/94112345678?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(propertyTitle || 'a property')}`}
+                    href={`https://wa.me/94777855554?text=Hi%2C%20I%27m%20interested%20in%20${encodeURIComponent(propertyTitle || 'a property')}`}
                     target="_blank"
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', background: '#25D366', color: 'white', border: 'none', borderRadius: '8px', padding: '12px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, textDecoration: 'none', marginBottom: '16px' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', background: '#25D366', color: 'white', border: 'none', borderRadius: '8px', padding: '12px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, textDecoration: 'none', marginBottom: '16px', minHeight: '44px' }}
                 >
                     <MessageCircle size={16} />
                     Chat on WhatsApp
                 </a>
 
                 <div style={{ backgroundColor: '#F5F7FA', borderRadius: '12px', padding: '16px' }}>
-                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#9AA3AF', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Your Agent</p>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#9AA3AF', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>Contact Us</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, #0B1F3A, #1A3560)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                             <User size={22} color="#FF6B1A" />
                         </div>
                         <div>
-                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', fontWeight: 700, color: '#0B1F3A' }}>Ceylon Roots Team</p>
+                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', fontWeight: 700, color: '#0B1F3A' }}>Ceylon Roots Holdings</p>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginTop: '4px' }}>
-                                <a href="tel:+94112345678" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#4A5568', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}><Phone size={11} color="#FF6B1A" /> +94 11 234 5678</a>
-                                <a href="mailto:info@ceylonroots.lk" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#4A5568', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}><Mail size={11} color="#FF6B1A" /> info@ceylonroots.lk</a>
+                                <a href="tel:+94777855554" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#4A5568', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}><Phone size={11} color="#FF6B1A" /> +94 777 855 554</a>
+                                <a href="mailto:ceylonrootsh@gmail.com" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#4A5568', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}><Mail size={11} color="#FF6B1A" /> ceylonrootsh@gmail.com</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <style jsx>{`
+                @media (max-width: 900px) {
+                    .enquiry-form {
+                        position: static !important;
+                        margin-top: 32px;
+                    }
+                }
+            `}</style>
         </div>
     )
 }

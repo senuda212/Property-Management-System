@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Home, ChevronRight, Search, X } from 'lucide-react'
 import PropertyCard from '@/components/properties/PropertyCard'
 import SkeletonCard from '@/components/ui/SkeletonCard'
+import { parseProperties } from '@/lib/parseProperty'
 
 interface Property {
     id: number
@@ -71,7 +72,7 @@ function PropertiesContent() {
             const res = await fetch(`/api/properties?${params.toString()}`)
             if (!res.ok) throw new Error()
             const data = await res.json()
-            setProperties(Array.isArray(data) ? data : [])
+            setProperties(parseProperties(Array.isArray(data) ? data : []))
             setPage(1)
         } catch {
             setError(true)
@@ -116,8 +117,8 @@ function PropertiesContent() {
             </section>
 
             {/* Sticky Filters */}
-            <div style={{ position: 'sticky', top: '72px', zIndex: 40, backgroundColor: 'white', boxShadow: '0 4px 20px rgba(11,31,58,0.1)', padding: '16px 24px' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ position: 'sticky', top: '72px', zIndex: 40, backgroundColor: 'white', boxShadow: '0 4px 20px rgba(11,31,58,0.1)', padding: '16px 24px' }} className="filters-bar">
+                <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }} className="filters-container">
                     <select value={city} onChange={e => setCity(e.target.value)} style={selectStyle}>
                         {cities.map(c => <option key={c}>{c}</option>)}
                     </select>
@@ -166,7 +167,7 @@ function PropertiesContent() {
                         </div>
                     ) : (
                         <>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }} className="properties-grid">
                                 {paginated.map((p, i) => <PropertyCard key={p.id} property={p} index={i} />)}
                             </div>
 
@@ -187,6 +188,46 @@ function PropertiesContent() {
                     )}
                 </div>
             </section>
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .filters-bar {
+                        padding: 12px 16px !important;
+                    }
+                    .filters-container {
+                        flex-direction: column !important;
+                        gap: 12px !important;
+                    }
+                    .filters-container select {
+                        width: 100% !important;
+                        min-width: auto !important;
+                    }
+                    .filters-container button {
+                        width: 100% !important;
+                        justify-content: center !important;
+                    }
+                    .filters-container span {
+                        width: 100% !important;
+                        text-align: center !important;
+                        margin-left: 0 !important;
+                        margin-top: 8px !important;
+                    }
+                    .properties-grid {
+                        grid-template-columns: 1fr !important;
+                        gap: 20px !important;
+                    }
+                    section[style*="padding: '48px 24px 80px'"] {
+                        padding: 32px 16px 60px !important;
+                    }
+                    div[style*="gridTemplateColumns: 'repeat"] {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+                @media (min-width: 769px) and (max-width: 1024px) {
+                    .properties-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                    }
+                }
+            `}</style>
         </>
     )
 }

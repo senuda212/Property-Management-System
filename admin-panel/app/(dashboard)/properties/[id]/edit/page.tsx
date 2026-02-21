@@ -2,9 +2,10 @@ import PropertyForm from '@/components/properties/PropertyForm'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 
-export default async function EditPropertyPage({ params }: { params: { id: string } }) {
+export default async function EditPropertyPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
     const property = await prisma.property.findUnique({
-        where: { id: parseInt(params.id) }
+        where: { id: parseInt(id) }
     })
 
     if (!property) notFound()
@@ -25,7 +26,7 @@ export default async function EditPropertyPage({ params }: { params: { id: strin
                 </div>
             </div>
 
-            <PropertyForm initialData={formattedData} id={params.id} />
+            <PropertyForm initialData={formattedData} id={id} />
         </div>
     )
 }

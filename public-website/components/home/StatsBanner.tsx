@@ -33,6 +33,27 @@ export default function StatsBanner() {
                     ))}
                 </div>
             </div>
+            <style jsx>{`
+                @media (max-width: 640px) {
+                    .stats-banner {
+                        padding: 48px 16px !important;
+                    }
+                    .stats-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                    }
+                    .stats-grid > div {
+                        border-right: none !important;
+                        border-bottom: 1px solid rgba(255,107,26,0.2) !important;
+                        padding: 24px 12px !important;
+                    }
+                    .stats-grid > div:nth-child(2n) {
+                        border-right: 1px solid rgba(255,107,26,0.2) !important;
+                    }
+                    .stats-grid > div:nth-last-child(-n+2) {
+                        border-bottom: none !important;
+                    }
+                }
+            `}</style>
         </section>
     )
 }

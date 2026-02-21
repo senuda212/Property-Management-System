@@ -1,10 +1,10 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { Bell, User, ChevronDown } from 'lucide-react'
+import { Bell, User, ChevronDown, Menu } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-export default function TopHeader() {
+export default function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
     const pathname = usePathname()
     const [unreadCount, setUnreadCount] = useState(0)
 
@@ -25,10 +25,15 @@ export default function TopHeader() {
     }, [])
 
     return (
-        <header className="h-16 bg-white border-b border-grey-light flex items-center justify-between px-8 sticky top-0 z-40 shadow-sm">
-            <h2 className="text-xl font-serif font-bold text-dark-blue">{getPageTitle()}</h2>
+        <header className="h-16 bg-white border-b border-grey-light flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 shadow-sm">
+            <div className="flex items-center gap-3">
+                <button onClick={onMenuClick} className="lg:hidden p-2 hover:bg-grey-light rounded transition-colors">
+                    <Menu size={20} className="text-dark-blue" />
+                </button>
+                <h2 className="text-lg md:text-xl font-serif font-bold text-dark-blue truncate">{getPageTitle()}</h2>
+            </div>
 
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-3 md:space-x-6">
                 {/* Notifications */}
                 <div className="relative cursor-pointer hover:bg-grey-light p-2 rounded-full transition-colors">
                     <Bell size={20} className="text-grey-dark" />

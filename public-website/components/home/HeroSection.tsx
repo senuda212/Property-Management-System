@@ -158,6 +158,27 @@ export default function HeroSection() {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
         }
+        @media (max-width: 640px) {
+          section[style*="minHeight: '100vh'"] {
+            min-height: 90vh !important;
+            padding-top: 60px !important;
+          }
+          div[style*="padding: '80px 24px'"] {
+            padding: 40px 16px !important;
+          }
+          h1[style*="fontSize: 'clamp"] {
+            font-size: 36px !important;
+            line-height: 1.2 !important;
+          }
+          div[style*="display: 'flex', gap: '16px'"] {
+            flex-direction: column !important;
+            width: 100% !important;
+          }
+          .btn-orange, .btn-outline-white {
+            width: 100% !important;
+            text-align: center !important;
+          }
+        }
       `}</style>
         </section>
     )

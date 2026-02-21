@@ -66,8 +66,9 @@ export default function LoginPage() {
             >
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-serif font-bold text-dark-blue">
-                        CEYLON ROOTS<span className="text-brand-orange">.</span>
+                        CRH<span className="text-brand-orange">.</span>
                     </h1>
+                    <p className="text-grey-mid text-xs mt-1">Ceylon Roots Holdings</p>
                     <p className="text-grey-mid text-sm uppercase tracking-widest mt-1">Admin Panel</p>
                     <div className="h-1 w-24 bg-gradient-to-r from-transparent via-brand-orange to-transparent mx-auto mt-4" />
                 </div>

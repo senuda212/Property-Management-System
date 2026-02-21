@@ -6,6 +6,7 @@ import Link from 'next/link'
 import PropertyCard from '@/components/properties/PropertyCard'
 import SkeletonCard from '@/components/ui/SkeletonCard'
 import SectionHeading from '@/components/ui/SectionHeading'
+import { parseProperties } from '@/lib/parseProperty'
 
 const tabs = ['All', 'For Sale', 'For Rent', 'Land', 'Commercial']
 
@@ -36,7 +37,7 @@ export default function FeaturedProperties() {
     useEffect(() => {
         fetch('/api/properties/featured')
             .then(r => r.json())
-            .then(data => { setProperties(Array.isArray(data) ? data : []); setLoading(false) })
+            .then(data => { setProperties(parseProperties(Array.isArray(data) ? data : [])); setLoading(false) })
             .catch(() => setLoading(false))
     }, [])
 
@@ -48,7 +49,7 @@ export default function FeaturedProperties() {
         })
 
     return (
-        <section style={{ backgroundColor: '#F5F7FA', padding: '80px 0' }}>
+        <section style={{ backgroundColor: '#F5F7FA', padding: '80px 0' }} className="featured-properties-section">
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
                 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
                     <SectionHeading label="HAND PICKED FOR YOU" title="Featured Properties" />
@@ -79,7 +80,7 @@ export default function FeaturedProperties() {
                 </div>
 
                 {/* Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }} className="featured-grid">
                     {loading
                         ? Array(6).fill(0).map((_, i) => <SkeletonCard key={i} />)
                         : filtered.length > 0
@@ -105,6 +106,35 @@ export default function FeaturedProperties() {
                     </Link>
                 </div>
             </div>
+            <style jsx>{`
+                @media (max-width: 640px) {
+                    .featured-properties-section {
+                        padding: 48px 0 !important;
+                    }
+                    .featured-properties-section > div {
+                        padding: 0 16px !important;
+                    }
+                    .featured-grid {
+                        grid-template-columns: 1fr !important;
+                        gap: 20px !important;
+                    }
+                    div[style*="display: 'flex', gap: '8px'"] {
+                        overflow-x: auto !important;
+                        -webkit-overflow-scrolling: touch !important;
+                        justify-content: flex-start !important;
+                        padding-bottom: 8px !important;
+                    }
+                    div[style*="display: 'flex', gap: '8px'"] button {
+                        flex-shrink: 0 !important;
+                        white-space: nowrap !important;
+                    }
+                }
+                @media (min-width: 641px) and (max-width: 1024px) {
+                    .featured-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                    }
+                }
+            `}</style>
         </section>
     )
 }

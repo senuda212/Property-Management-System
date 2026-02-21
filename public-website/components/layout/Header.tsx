@@ -55,14 +55,14 @@ export default function Header() {
                                     width: '32px', height: '32px',
                                     background: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)',
                                     borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: 'white', fontWeight: 'bold', fontFamily: 'Playfair Display, serif'
-                                }}>C</div>
+                                    color: 'white', fontWeight: 'bold', fontFamily: 'Playfair Display, serif', fontSize: '14px'
+                                }}>CRH</div>
                                 <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-                                    <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', fontWeight: 700, color: 'white', letterSpacing: '0.5px' }}>
-                                        CEYLON ROOTS
+                                    <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '16px', fontWeight: 700, color: 'white', letterSpacing: '0.5px' }}>
+                                        CRH
                                     </span>
-                                    <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '10px', fontWeight: 500, color: '#94A3B8', letterSpacing: '2px', textTransform: 'uppercase' }}>
-                                        Holdings
+                                    <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '9px', fontWeight: 500, color: '#94A3B8', letterSpacing: '0.5px' }}>
+                                        Ceylon Roots Holdings
                                     </span>
                                 </div>
                             </div>
@@ -142,9 +142,14 @@ export default function Header() {
                         }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-                            <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, color: 'white' }}>
-                                Navigation
-                            </span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', fontWeight: 700, color: 'white' }}>
+                                    CRH
+                                </span>
+                                <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#94A3B8' }}>
+                                    Ceylon Roots Holdings
+                                </span>
+                            </div>
                             <button
                                 onClick={() => setMobileOpen(false)}
                                 style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
@@ -200,17 +205,22 @@ export default function Header() {
             </AnimatePresence>
 
             <style jsx global>{`
-                @media (max-width: 768px) {
+                @media (max-width: 1023px) {
                     .hidden-mobile { display: none !important; }
                     .show-mobile { display: flex !important; }
                 }
-                @media (min-width: 769px) {
+                @media (min-width: 1024px) {
                     .show-mobile { display: none !important; }
                     .hidden-mobile { display: flex !important; }
                 }
                 .nav-link:hover {
                     background-color: rgba(255, 255, 255, 0.05) !important;
                     color: white !important;
+                }
+                @media (max-width: 640px) {
+                    header div[style*="padding: 0 24px"] {
+                        padding: 0 16px !important;
+                    }
                 }
             `}</style>
         </>

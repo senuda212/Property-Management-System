@@ -66,7 +66,7 @@ export default function SettingsPage() {
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-grey-mid uppercase tracking-widest mb-1">Tagline</label>
-                            <input type="text" defaultValue="Your Luxury Property Partner in Sri Lanka" className="w-full bg-off-white border border-grey-light rounded-xl py-3 px-4 focus:outline-none focus:border-dark-blue" />
+                            <input type="text" defaultValue="Rooting For You" className="w-full bg-off-white border border-grey-light rounded-xl py-3 px-4 focus:outline-none focus:border-dark-blue" />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>

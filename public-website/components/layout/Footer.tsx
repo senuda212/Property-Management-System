@@ -7,13 +7,12 @@ import { Facebook, Instagram, Linkedin, MessageCircle, Phone, Mail, MapPin } fro
 const quickLinks = ['Home', 'Properties', 'About Us', 'Contact Us', 'Blog']
 const quickHrefs = ['/', '/properties', '/about', '/contact', '#']
 
-const services = ['Buy Property', 'Sell Property', 'Rent Property', 'Property Valuation', 'Investment Consulting']
+const services = ['Real Estate Services', 'Property Management & Maintenance', 'Interior Designing']
 
 const socials = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: MessageCircle, href: 'https://wa.me/94112345678', label: 'WhatsApp' },
+    { icon: Facebook, href: 'https://facebook.com/ceylonrootsholdings', label: 'Facebook' },
+    { icon: Instagram, href: 'https://instagram.com/ceylonrootsholdings', label: 'Instagram' },
+    { icon: MessageCircle, href: 'https://wa.me/94777855554', label: 'WhatsApp' },
 ]
 
 export default function Footer() {
@@ -40,14 +39,22 @@ export default function Footer() {
                                 width: '32px', height: '32px',
                                 background: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)',
                                 borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                color: 'white', fontWeight: 'bold', fontFamily: 'Playfair Display, serif'
-                            }}>C</div>
-                            <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, color: 'white' }}>
-                                CEYLON ROOTS
-                            </span>
+                                color: 'white', fontWeight: 'bold', fontFamily: 'Playfair Display, serif', fontSize: '12px'
+                            }}>CRH</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+                                <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', fontWeight: 700, color: 'white' }}>
+                                    CRH
+                                </span>
+                                <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '10px', color: '#94A3B8' }}>
+                                    Ceylon Roots Holdings
+                                </span>
+                            </div>
                         </div>
-                        <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', color: '#94A3B8', lineHeight: 1.6, marginBottom: '32px', maxWidth: '300px' }}>
-                            We connect buyers, sellers and renters with premium properties across Sri Lanka, delivering exceptional service and trusted expertise since 2014.
+                        <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', color: '#94A3B8', lineHeight: 1.6, marginBottom: '8px', maxWidth: '300px' }}>
+                            Rooting For You
+                        </p>
+                        <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#64748B', lineHeight: 1.6, marginBottom: '32px', maxWidth: '300px' }}>
+                            We connect buyers, sellers and renters with premium properties across Sri Lanka, delivering exceptional service and trusted expertise.
                         </p>
                         <div style={{ display: 'flex', gap: '12px' }}>
                             {socials.map(({ icon: Icon, href, label }) => (
@@ -124,9 +131,10 @@ export default function Footer() {
                         </h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             {[
-                                { icon: Phone, text: '+94 11 234 5678', href: 'tel:+94112345678', label: 'Call Us' },
-                                { icon: Mail, text: 'info@ceylonroots.lk', href: 'mailto:info@ceylonroots.lk', label: 'Email Us' },
-                                { icon: MapPin, text: 'No. 123, Galle Road, Colombo 03', label: 'Visit Us' },
+                                { icon: Phone, text: '+94 777 855 554', href: 'tel:+94777855554', label: 'Call Us' },
+                                { icon: Phone, text: '+94 717 555 572', href: 'tel:+94717555572', label: 'Call Us' },
+                                { icon: Mail, text: 'ceylonrootsh@gmail.com', href: 'mailto:ceylonrootsh@gmail.com', label: 'Email Us' },
+                                { icon: MapPin, text: '231/4, Rosegarden Road, Wattegedara Rd, Maharagama', label: 'Visit Us' },
                             ].map(({ icon: Icon, text, href, label }) => (
                                 <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                                     <div style={{ background: 'rgba(249,115,22,0.1)', padding: '8px', borderRadius: '8px', color: '#F97316' }}>
@@ -156,6 +164,9 @@ export default function Footer() {
                     <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#64748B' }}>
                         © 2025 Ceylon Roots Holdings. All Rights Reserved.
                     </p>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#475569' }}>
+                        Managing Director: Suneth Dewanarayana (BBA Sri Lanka)
+                    </p>
                     <div style={{ display: 'flex', gap: '24px' }}>
                         <a href="#" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>Privacy Policy</a>
                         <a href="#" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>Terms of Service</a>
@@ -166,6 +177,15 @@ export default function Footer() {
                 .social-btn:hover { background: #F97316 !important; color: white !important; border-color: #F97316 !important; transform: translateY(-2px) !important; }
                 .footer-link:hover { color: white !important; padding-left: 6px !important; }
                 .footer-link:hover span { opacity: 1 !important; }
+                @media (max-width: 768px) {
+                    footer div[style*="grid-template-columns"] {
+                        grid-template-columns: 1fr !important;
+                        gap: 32px !important;
+                    }
+                    footer div[style*="padding: 80px 24px 0"] {
+                        padding: 60px 16px 0 !important;
+                    }
+                }
             `}</style>
         </footer>
     )

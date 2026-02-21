@@ -17,7 +17,8 @@ export default async function RecentInquiries() {
                 </Link>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                     <thead className="bg-off-white text-grey-dark text-xs uppercase font-bold">
                         <tr>
@@ -59,6 +60,33 @@ export default async function RecentInquiries() {
                         )}
                     </tbody>
                 </table>
+            </div>
+            
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-grey-light">
+                {inquiries.map((inquiry) => (
+                    <div key={inquiry.id} className="p-4 space-y-2">
+                        <div>
+                            <p className="text-sm font-bold text-dark-blue">{inquiry.fullName}</p>
+                            <p className="text-xs text-grey-mid">{inquiry.email}</p>
+                        </div>
+                        <p className="text-sm text-grey-dark">{inquiry.propertyTitle || 'General Inquiry'}</p>
+                        <div className="flex items-center justify-between">
+                            <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${inquiry.status === 'Unread' ? 'bg-brand-orange/10 text-brand-orange' :
+                                inquiry.status === 'Read' ? 'bg-grey-mid/10 text-grey-mid' : 'bg-success-green/10 text-success-green'
+                            }`}>
+                                {inquiry.status}
+                            </span>
+                            <span className="text-xs text-grey-mid">{new Date(inquiry.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                ))}
+                {inquiries.length === 0 && (
+                    <div className="p-8 text-center text-grey-mid">
+                        <Mail className="mx-auto mb-2 opacity-20" size={40} />
+                        No inquiries yet
+                    </div>
+                )}
             </div>
         </div>
     )

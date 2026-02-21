@@ -128,7 +128,8 @@ export default function PropertyTable() {
 
             {/* Table */}
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-off-white text-grey-dark text-xs uppercase font-bold">
                             <tr>
@@ -210,6 +211,65 @@ export default function PropertyTable() {
                             )}
                         </tbody>
                     </table>
+                </div>
+                
+                {/* Mobile Card View */}
+                <div className="md:hidden divide-y divide-grey-light">
+                    {isLoading ? (
+                        <div className="p-8 text-center">
+                            <Loader2 className="animate-spin mx-auto text-brand-orange" size={40} />
+                        </div>
+                    ) : properties.map((prop: any, idx) => (
+                        <div key={prop.id} className="p-4 space-y-3">
+                            <div className="flex items-start justify-between">
+                                <div className="flex items-center space-x-3 flex-1">
+                                    <div className="h-12 w-12 bg-grey-light rounded overflow-hidden flex-shrink-0">
+                                        {JSON.parse(prop.images || '[]')[0] ? (
+                                            <img src={JSON.parse(prop.images || '[]')[0]} alt="" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <div className="h-full w-full flex items-center justify-center text-grey-mid"><Building2 size={20} /></div>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-bold text-dark-blue truncate">{prop.title}</p>
+                                        <p className="text-xs text-grey-mid">{prop.city}</p>
+                                        <p className="text-sm font-bold text-dark-blue mt-1">LKR {prop.price.toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${prop.status === 'For Sale' ? 'bg-brand-orange/10 text-brand-orange' :
+                                    prop.status === 'For Rent' ? 'bg-success-green/10 text-success-green' : 'bg-grey-mid/10 text-grey-mid'
+                                }`}>
+                                    {prop.status}
+                                </span>
+                                <div className="flex items-center gap-4">
+                                    <div className={`h-5 w-10 rounded-full transition-colors ${prop.isActive ? 'bg-success-green' : 'bg-grey-mid'}`}>
+                                        <div className={`h-3 w-3 bg-white rounded-full transition-all mt-1 ${prop.isActive ? 'ml-6' : 'ml-1'}`} />
+                                    </div>
+                                    <button onClick={() => toggleFeatured(prop.id, prop.isFeatured)} className="p-1">
+                                        <Star size={18} className={prop.isFeatured ? 'text-warning-yellow fill-warning-yellow' : 'text-grey-mid'} />
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-3 pt-2 border-t border-grey-light">
+                                <Link href={`/properties/${prop.id}/edit`} className="text-mid-blue hover:text-brand-orange transition-colors p-2">
+                                    <Edit size={18} />
+                                </Link>
+                                <a href={`http://localhost:4000/properties/${prop.id}`} target="_blank" className="text-grey-dark hover:text-dark-blue transition-colors p-2">
+                                    <Eye size={18} />
+                                </a>
+                                <button onClick={() => handleDelete(prop.id)} className="text-danger-red hover:scale-110 transition-transform p-2">
+                                    <Trash2 size={18} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                    {!isLoading && properties.length === 0 && (
+                        <div className="p-8 text-center text-grey-mid">
+                            No properties found. Add your first listing!
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

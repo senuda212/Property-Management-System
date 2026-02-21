@@ -17,9 +17,10 @@ interface ContactForm {
 }
 
 const contactCards = [
-    { icon: Phone, label: 'Phone', value: '+94 11 234 5678', href: 'tel:+94112345678' },
-    { icon: Mail, label: 'Email', value: 'info@ceylonroots.lk', href: 'mailto:info@ceylonroots.lk' },
-    { icon: MapPin, label: 'Address', value: 'No. 123, Galle Road, Colombo 03, Sri Lanka', href: undefined },
+    { icon: Phone, label: 'Phone (WhatsApp)', value: '+94 777 855 554', href: 'tel:+94777855554' },
+    { icon: Phone, label: 'Phone', value: '+94 717 555 572', href: 'tel:+94717555572' },
+    { icon: Mail, label: 'Email', value: 'ceylonrootsh@gmail.com', href: 'mailto:ceylonrootsh@gmail.com' },
+    { icon: MapPin, label: 'Address', value: '231/4, Rosegarden Road, Wattegedara Rd, Maharagama', href: undefined },
     { icon: Clock, label: 'Hours', value: 'Mon–Fri: 8:30am–5:30pm | Sat: 9am–1pm', href: undefined },
 ]
 
@@ -66,7 +67,7 @@ export default function ContactPage() {
 
             {/* Contact Layout */}
             <section style={{ backgroundColor: '#F5F7FA', padding: '64px 24px' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'start' }}>
+                <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'start' }} className="contact-layout">
                     {/* Left — Form */}
                     <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
                         <div style={{ backgroundColor: 'white', borderRadius: '20px', padding: '36px', boxShadow: '0 8px 40px rgba(11,31,58,0.1)', borderTop: '4px solid #FF6B1A' }}>
@@ -135,7 +136,7 @@ export default function ContactPage() {
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#9AA3AF', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>WhatsApp</p>
-                                    <a href="https://wa.me/94112345678" target="_blank" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#25D366', fontWeight: 700, textDecoration: 'none' }}>
+                                    <a href="https://wa.me/94777855554" target="_blank" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#25D366', fontWeight: 700, textDecoration: 'none' }}>
                                         Click to Chat on WhatsApp →
                                     </a>
                                 </div>
@@ -184,7 +185,7 @@ export default function ContactPage() {
             {/* Map */}
             <section>
                 <iframe
-                    src="https://maps.google.com/maps?q=Colombo+3,+Sri+Lanka&z=14&output=embed"
+                    src="https://maps.google.com/maps?q=231/4+Rosegarden+Road+Wattegedara+Rd+Maharagama&z=15&output=embed"
                     width="100%"
                     height="400"
                     style={{ border: 0, display: 'block' }}
@@ -201,6 +202,20 @@ export default function ContactPage() {
                     <FAQAccordion />
                 </div>
             </section>
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .contact-layout {
+                        grid-template-columns: 1fr !important;
+                        gap: 32px !important;
+                    }
+                    section[style*="padding: 64px 24px"] {
+                        padding: 48px 16px !important;
+                    }
+                    section iframe {
+                        height: 250px !important;
+                    }
+                }
+            `}</style>
         </div>
     )
 }

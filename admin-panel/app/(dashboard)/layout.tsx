@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
 import TopHeader from '@/components/layout/TopHeader'
 
@@ -6,12 +9,14 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
     return (
         <div className="min-h-screen flex bg-off-white">
-            <Sidebar />
-            <main className="flex-1 transition-all duration-300 ml-60">
-                <TopHeader />
-                <div className="p-8">
+            <Sidebar mobileOpen={mobileMenuOpen} setMobileOpen={setMobileMenuOpen} />
+            <main className="flex-1 transition-all duration-300 lg:ml-60">
+                <TopHeader onMenuClick={() => setMobileMenuOpen(true)} />
+                <div className="p-4 md:p-8">
                     {children}
                 </div>
             </main>

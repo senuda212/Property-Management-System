@@ -8,6 +8,7 @@ import { Home, ChevronRight, MapPin, Bed, Bath, Square, Car, Share2, CheckCircle
 import PropertyGallery from '@/components/properties/PropertyGallery'
 import EnquiryForm from '@/components/properties/EnquiryForm'
 import PropertyCard from '@/components/properties/PropertyCard'
+import { parseProperty, parseProperties } from '@/lib/parseProperty'
 
 interface Property {
     id: number
@@ -53,14 +54,15 @@ export default function PropertyDetailPage() {
             .then(async r => {
                 if (r.status === 404) { router.push('/properties'); return }
                 const data = await r.json()
-                setProperty(data)
+                setProperty(parseProperty(data))
                 // Fetch similar
                 return fetch(`/api/properties?type=${data.type}&city=${data.city}`)
             })
             .then(async r => {
                 if (!r) return
                 const data = await r.json()
-                setSimilar(Array.isArray(data) ? data.filter((p: Property) => p.id !== Number(id)).slice(0, 3) : [])
+                const list = Array.isArray(data) ? data.filter((p: Property) => p.id !== Number(id)).slice(0, 3) : []
+                setSimilar(parseProperties(list))
             })
             .finally(() => setLoading(false))
     }, [id, router])
@@ -123,7 +125,7 @@ export default function PropertyDetailPage() {
                         <ArrowLeft size={16} /> Back to Listings
                     </Link>
                     <div style={{ display: 'flex', gap: '12px' }}>
-                        <a href={`https://wa.me/94112345678?text=Hi%20I'm%20interested%20in%20${encodeURIComponent(property.title)}`} target="_blank" style={{ padding: '10px 18px', borderRadius: '8px', background: '#25D366', color: 'white', textDecoration: 'none', fontFamily: 'DM Sans, sans-serif', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>WhatsApp</a>
+                        <a href={`https://wa.me/94777855554?text=Hi%20I'm%20interested%20in%20${encodeURIComponent(property.title)}`} target="_blank" style={{ padding: '10px 18px', borderRadius: '8px', background: '#25D366', color: 'white', textDecoration: 'none', fontFamily: 'DM Sans, sans-serif', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', minHeight: '44px' }}>WhatsApp</a>
                         <button onClick={handleCopyLink} style={{ padding: '10px 18px', borderRadius: '8px', background: copied ? '#22C55E' : '#F1F5F9', border: 'none', color: copied ? 'white' : '#0F172A', fontFamily: 'DM Sans, sans-serif', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s' }}>
                             <Share2 size={14} /> {copied ? 'Copied!' : 'Share'}
                         </button>
@@ -138,7 +140,7 @@ export default function PropertyDetailPage() {
                 </motion.div>
 
                 {/* Two-col layout */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }} className="property-detail-layout">
                     {/* Left column */}
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
                         {/* Header */}
@@ -256,8 +258,53 @@ export default function PropertyDetailPage() {
 
             <style>{`
         @media (max-width: 900px) {
-          div[style*="grid-template-columns: 1fr 380px"] {
+          .property-detail-layout {
             grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+          div[style*="padding: '32px 24px'"] {
+            padding: 24px 16px !important;
+          }
+          div[style*="padding: '0 24px'"] {
+            padding: 0 16px !important;
+          }
+          div[style*="display: 'flex', gap: '12px'"] {
+            flex-direction: column !important;
+            width: 100% !important;
+          }
+          div[style*="display: 'flex', gap: '12px'"] a,
+          div[style*="display: 'flex', gap: '12px'"] button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          div[style*="display: 'flex', borderBottom"] {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          div[style*="display: 'flex', borderBottom"] button {
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            min-width: 120px !important;
+          }
+          div[style*="gridTemplateColumns: 'repeat"] {
+            grid-template-columns: 1fr !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            display: flex !important;
+            gap: 16px !important;
+          }
+          div[style*="gridTemplateColumns: 'repeat"] > * {
+            min-width: 280px !important;
+            flex-shrink: 0 !important;
+          }
+        }
+        @media (max-width: 640px) {
+          section[style*="height: '340px'"] {
+            height: 280px !important;
+            padding-top: 60px !important;
+          }
+          h1[style*="fontSize: 'clamp"] {
+            font-size: 24px !important;
           }
         }
       `}</style>

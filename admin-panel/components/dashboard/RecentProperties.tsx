@@ -17,7 +17,8 @@ export default async function RecentProperties() {
                 </Link>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                     <thead className="bg-off-white text-grey-dark text-xs uppercase font-bold">
                         <tr>
@@ -61,6 +62,38 @@ export default async function RecentProperties() {
                         )}
                     </tbody>
                 </table>
+            </div>
+            
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-grey-light">
+                {properties.map((property) => (
+                    <div key={property.id} className="p-4 space-y-2">
+                        <div>
+                            <p className="text-sm font-bold text-dark-blue">{property.title}</p>
+                            <p className="text-xs text-grey-mid">{property.city}</p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold text-dark-blue">LKR {property.price.toLocaleString()}</p>
+                            <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${property.status === 'For Sale' ? 'bg-brand-orange/10 text-brand-orange' :
+                                property.status === 'For Rent' ? 'bg-success-green/10 text-success-green' : 'bg-grey-mid/10 text-grey-mid'
+                            }`}>
+                                {property.status}
+                            </span>
+                        </div>
+                        <div className="pt-2 border-t border-grey-light">
+                            <Link href={`/properties/${property.id}/edit`} className="text-mid-blue hover:text-brand-orange inline-flex items-center gap-2">
+                                <Edit size={16} />
+                                <span className="text-sm font-medium">Edit</span>
+                            </Link>
+                        </div>
+                    </div>
+                ))}
+                {properties.length === 0 && (
+                    <div className="p-8 text-center text-grey-mid">
+                        <Building2 className="mx-auto mb-2 opacity-20" size={40} />
+                        No properties yet
+                    </div>
+                )}
             </div>
         </div>
     )

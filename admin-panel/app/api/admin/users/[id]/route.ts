@@ -4,13 +4,14 @@ import { requireAuth, logActivity } from '@/lib/apiAuth'
 import { sanitizeObject } from '@/lib/sanitize'
 import bcrypt from 'bcryptjs'
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { user, error } = await requireAuth('VIEW_USERS')
     if (error) return error
 
     try {
+        const { id } = await params
         const targetUser = await prisma.user.findUnique({
-            where: { id: parseInt(params.id) },
+            where: { id: parseInt(id) },
             select: {
                 id: true,
                 fullName: true,
@@ -33,12 +34,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { user, error } = await requireAuth('EDIT_USER')
     if (error) return error
 
     try {
-        const targetId = parseInt(params.id)
+        const { id } = await params
+        const targetId = parseInt(id)
         const body = await req.json()
         const sanitizedData = sanitizeObject(body)
 
@@ -84,12 +86,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { user, error } = await requireAuth('DELETE_USER')
     if (error) return error
 
     try {
-        const targetId = parseInt(params.id)
+        const { id } = await params
+        const targetId = parseInt(id)
 
         if (targetId === Number(user.id)) {
             return NextResponse.json({ error: 'You cannot delete your own account' }, { status: 400 })

@@ -19,7 +19,16 @@ import {
     Star
 } from 'lucide-react'
 import toast from 'react-hot-toast'
-import ImageUpload from '@/components/ui/ImageUpload'
+import ImageUpload from './ImageUpload'
+
+interface UploadedImage {
+    url: string
+    publicId: string
+    uploading?: boolean
+    error?: string
+    file?: File
+    preview?: string
+}
 
 const propertySchema = z.object({
     title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -54,6 +63,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [featureInput, setFeatureInput] = useState('')
+    const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
 
     const {
         register,
@@ -101,6 +111,25 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
             features: [],
         }
     })
+
+    // Initialize images from initialData when editing
+    useEffect(() => {
+        if (initialData?.images && Array.isArray(initialData.images) && initialData.images.length > 0) {
+            const existingImages: UploadedImage[] = (initialData.images as string[]).map((url: string) => ({
+                url,
+                publicId: '' // We don't store publicId for existing images from database
+            }))
+            setUploadedImages(existingImages)
+        }
+    }, [initialData])
+
+    // Sync uploadedImages state to react-hook-form's images field
+    useEffect(() => {
+        const urls = uploadedImages
+            .filter(img => img.url && !img.uploading && !img.error)
+            .map(img => img.url)
+        setValue('images', urls, { shouldValidate: true })
+    }, [uploadedImages, setValue])
 
     /* Removing useFieldArray logic for images as we use ImageUpload component */
 
@@ -152,7 +181,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
     return (
         <div className="flex flex-col lg:flex-row gap-8">
             {/* Form Section */}
-            <div className="flex-1">
+            <div className="flex-1 w-full">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 pb-20">
 
                     {/* Section 1: Basic Information */}
@@ -367,10 +396,14 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
 
                         <div className="space-y-3">
                             <ImageUpload
-                                value={watchedValues.images}
-                                onChange={(urls) => setValue('images', urls)}
+                                value={uploadedImages}
+                                onChange={setUploadedImages}
+                                maxImages={10}
                             />
                             {errors.images && <p className="text-danger-red text-xs mt-1">{errors.images.message}</p>}
+                            {uploadedImages.length === 0 && (
+                                <p className="text-xs text-danger-red">At least one image is required</p>
+                            )}
                         </div>
                     </div>
 
@@ -486,7 +519,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
             </div>
 
             {/* Preview Section */}
-            <div className="w-full lg:w-[320px]">
+            <div className="w-full lg:w-[320px] hidden lg:block">
                 <div className="sticky top-24 space-y-6">
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-grey-light">
                         <div className="flex items-center space-x-2 mb-4">

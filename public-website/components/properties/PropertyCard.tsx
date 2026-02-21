@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { MapPin, Bed, Bath, Square, Car, Heart, ArrowRight } from 'lucide-react'
+import { parsePropertyArrayField } from '@/lib/parseProperty'
 
 interface Property {
     id: number
@@ -20,8 +21,8 @@ interface Property {
     address: string
     city: string
     district: string
-    images: string[]
-    features: string[]
+    images: string[] | string
+    features: string[] | string
     isFeatured: boolean
 }
 
@@ -39,7 +40,9 @@ function formatPrice(price: number): string {
 
 export default function PropertyCard({ property, index = 0 }: PropertyCardProps) {
     const [saved, setSaved] = useState(false)
-    const imageUrl = property.images?.[0] || null
+    const safeImages = parsePropertyArrayField(property.images)
+    const safeFeatures = parsePropertyArrayField(property.features)
+    const imageUrl = safeImages[0] || null
 
     const statusColor = property.status === 'For Sale'
         ? 'linear-gradient(90deg, #F97316, #FB923C)'
