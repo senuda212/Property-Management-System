@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-dark-blue: #0B1F3A;
+  --color-mid-blue: #1A3560;
+  --color-sidebar-bg: #0B1F3A;
+  --color-sidebar-hover: #1A3560;
+  --color-brand-orange: #FF6B1A;
+  --color-brand-green: #39FF14;
+  --color-success-green: #22C55E;
+  --color-danger-red: #EF4444;
+  --color-warning-yellow: #F59E0B;
+  --color-off-white: #F5F7FA;
+  --color-grey-light: #E8ECF0;
+  --color-grey-mid: #9AA3AF;
+  --color-grey-dark: #4A5568;
+  --color-card-bg: #FFFFFF;
+
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+}
+
+@layer base {
+  @font-face {
+    font-family: 'Playfair Display';
+    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap');
+  }
+
+  @font-face {
+    font-family: 'DM Sans';
+    src: url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+  }
+}
+
+:root {
+  --background: #F5F7FA;
+  --foreground: #0B1F3A;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+}
+
+/* Sidebar scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B1F3A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF6B1A;
+  border-radius: 3px;
+}

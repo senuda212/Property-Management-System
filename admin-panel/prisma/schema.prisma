@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String
+  type          String
+  status        String
+  price         Float
+  currency      String    @default("LKR")
+  bedrooms      Int?
+  bathrooms     Int?
+  sqft          Float?
+  parking       Boolean   @default(false)
+  address       String
+  city          String
+  district      String
+  latitude      Float?
+  longitude     Float?
+  images        String
+  features      String
+  isActive      Boolean   @default(true)
+  isFeatured    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Inquiry {
+  id            Int       @id @default(autoincrement())
+  fullName      String
+  email         String
+  phone         String
+  subject       String?
+  message       String
+  propertyId    Int?
+  propertyTitle String?
+  status        String    @default("Unread")
+  createdAt     DateTime  @default(now())
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  fullName      String
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String
+  role          String    @default("employee")
+  // Roles: "admin", "manager", "employee"
+  isActive      Boolean   @default(true)
+  lastLogin     DateTime?
+  loginAttempts Int       @default(0)
+  lockedUntil   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  createdBy     Int?
+  sessions      UserSession[]
+  activityLogs  ActivityLog[]
+}
+
+model UserSession {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  token       String   @unique
+  ipAddress   String?
+  userAgent   String?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int?
+  username    String?
+  action      String
+  // e.g. "LOGIN", "LOGOUT", "ADD_PROPERTY", "DELETE_PROPERTY", "UPDATE_INQUIRY", "ADD_USER", "DELETE_USER"
+  detail      String?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model LoginAttempt {
+  id          Int      @id @default(autoincrement())
+  username    String
+  ipAddress   String?
+  success     Boolean
+  createdAt   DateTime @default(now())
+}
