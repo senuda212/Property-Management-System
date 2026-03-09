@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/apiAuth'
 
 export async function GET(req: NextRequest) {
-    const { user, error } = await requireAuth('VIEW_LOGS')
+    const { error } = await requireAuth('VIEW_LOGS')
     if (error) return error
 
     try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '25')
         const skip = (page - 1) * limit
 
-        const where: any = {}
+        const where: Prisma.ActivityLogWhereInput = {}
         if (username && username !== 'All') where.username = username
         if (action && action !== 'All') where.action = action
 
@@ -34,7 +35,7 @@ export async function GET(req: NextRequest) {
             pages: Math.ceil(total / limit),
             currentPage: page
         })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch logs' }, { status: 500 })
     }
 }

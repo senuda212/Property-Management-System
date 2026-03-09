@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { Upload, X, ImageIcon, Loader2, Plus } from 'lucide-react'
+import { Upload, X, Loader2, Plus } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface ImageUploadProps {
@@ -43,7 +43,7 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
             } else {
                 toast.error(data.error || 'Upload failed')
             }
-        } catch (error) {
+        } catch {
             toast.error('An error occurred during upload')
         } finally {
             setIsUploading(false)
@@ -69,6 +69,7 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             handleUpload(e.dataTransfer.files)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value])
 
     const removeImage = (index: number) => {
@@ -93,6 +94,7 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
                     ref={fileInputRef}
                     multiple
                     accept="image/*"
+                    aria-label="Upload property images"
                     className="hidden"
                     onChange={(e) => e.target.files && handleUpload(e.target.files)}
                 />
@@ -122,10 +124,12 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {value.map((url, index) => (
                         <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border border-grey-light shadow-sm">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={url} alt={`Property ${index + 1}`} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <button
                                     type="button"
+                                    aria-label={`Remove image ${index + 1}`}
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         removeImage(index)

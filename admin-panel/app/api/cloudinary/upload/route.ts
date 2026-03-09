@@ -11,7 +11,7 @@ cloudinary.config({
 
 export async function POST(req: NextRequest) {
   // Verify admin is authenticated before allowing uploads
-  const { user, error } = await requireAuth()
+  const { error } = await requireAuth()
   if (error) return error
 
   try {
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(bytes)
 
     // Upload to Cloudinary
-    const result = await new Promise<any>((resolve, reject) => {
+    const result = await new Promise<{ secure_url: string; public_id: string; width: number; height: number }>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
           {
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
 
 // DELETE route — remove image from Cloudinary
 export async function DELETE(req: NextRequest) {
-  const { user, error } = await requireAuth()
+  const { error } = await requireAuth()
   if (error) return error
 
   try {

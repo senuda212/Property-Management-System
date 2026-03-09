@@ -249,8 +249,8 @@ export default function PropertyDetailPage() {
                         )}
                     </motion.div>
 
-                    {/* Right sidebar */}
-                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
+                    {/* Right sidebar — sticky so it scrolls alongside left content */}
+                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} style={{ position: 'sticky', top: '90px', alignSelf: 'start' }}>
                         <EnquiryForm propertyId={property.id} propertyTitle={property.title} />
                     </motion.div>
                 </div>

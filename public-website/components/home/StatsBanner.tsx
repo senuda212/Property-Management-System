@@ -12,10 +12,10 @@ const stats = [
 
 export default function StatsBanner() {
     return (
-        <section style={{ background: 'linear-gradient(135deg, #0B1F3A 0%, #1A3560 50%, #0B1F3A 100%)', padding: '80px 24px', position: 'relative', overflow: 'hidden' }}>
+        <section className="stats-banner" style={{ background: 'linear-gradient(135deg, #0B1F3A 0%, #1A3560 50%, #0B1F3A 100%)', padding: '80px 24px', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,107,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,107,26,0.03) 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
             <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0', alignItems: 'center' }}>
+                <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0', alignItems: 'center' }}>
                     {stats.map((stat, i) => (
                         <motion.div
                             key={stat.label}

@@ -29,16 +29,28 @@ const userSchema = z.object({
     username: z.string().min(4, 'Username must be at least 4 characters'),
     password: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
     role: z.enum(['admin', 'manager', 'employee']),
-    isActive: z.boolean().default(true)
+    isActive: z.boolean()
 })
 
 type UserFormData = z.infer<typeof userSchema>
 
+interface User {
+    id: number
+    fullName: string
+    email: string
+    username: string
+    role: string
+    isActive: boolean
+    lastLogin?: string | null
+    loginAttempts: number
+    lockedUntil?: string | null
+    createdAt: string
+}
+
 export default function UsersPage() {
-    const [users, setUsers] = useState<any[]>([])
-    const [isLoading, setIsLoading] = useState(true)
+    const [users, setUsers] = useState<User[]>([])
     const [isPanelOpen, setIsPanelOpen] = useState(false)
-    const [editingUser, setEditingUser] = useState<any>(null)
+    const [editingUser, setEditingUser] = useState<User | null>(null)
     const [searchQuery, setSearchQuery] = useState('')
 
     const fetchUsers = async () => {
@@ -46,14 +58,13 @@ export default function UsersPage() {
             const res = await fetch('/api/admin/users')
             const data = await res.json()
             if (Array.isArray(data)) setUsers(data)
-        } catch (error) {
+        } catch {
             toast.error('Failed to load users')
-        } finally {
-            setIsLoading(false)
         }
     }
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchUsers()
     }, [])
 
@@ -69,7 +80,7 @@ export default function UsersPage() {
         u.email.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
-    const handleToggleStatus = async (user: any) => {
+    const handleToggleStatus = async (user: User) => {
         try {
             const res = await fetch(`/api/admin/users/${user.id}`, {
                 method: 'PATCH',
@@ -82,7 +93,7 @@ export default function UsersPage() {
                 const err = await res.json()
                 toast.error(err.error || 'Failed to update status')
             }
-        } catch (error) {
+        } catch {
             toast.error('Connection error')
         }
     }
@@ -94,7 +105,7 @@ export default function UsersPage() {
                 toast.success('Account unlocked')
                 fetchUsers()
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to unlock account')
         }
     }
@@ -110,27 +121,27 @@ export default function UsersPage() {
                 const err = await res.json()
                 toast.error(err.error || 'Failed to delete user')
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete user')
         }
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-x-hidden w-full max-w-[100vw]">
             {/* Top Bar */}
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
                 <h1 className="text-2xl font-serif font-bold text-dark-blue">User Management</h1>
                 <button
                     onClick={() => { setEditingUser(null); setIsPanelOpen(true); }}
-                    className="bg-brand-orange hover:bg-brand-orange/90 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-md active:scale-95"
+                    className="bg-brand-orange hover:bg-brand-orange/90 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 w-full sm:w-auto"
                 >
                     <UserPlus size={18} />
                     Add New User
                 </button>
             </div>
 
-            {/* Stats Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Stats Row — 3 cards in a row on mobile, max-h 80px, text-2xl / text-xs */}
+            <div className="grid grid-cols-3 md:grid-cols-3 gap-3 md:gap-6">
                 <StatCard icon={Users} label="Total Users" value={stats.total} color="blue" />
                 <StatCard icon={UserCheck} label="Active Users" value={stats.active} color="green" />
                 <StatCard icon={ShieldAlert} label="Locked Accounts" value={stats.locked} color="red" />
@@ -150,78 +161,138 @@ export default function UsersPage() {
                 </div>
             </div>
 
-            {/* Users Table */}
+            {/* Users — Table on desktop, Card view on mobile */}
             <div className="bg-white rounded-xl shadow-sm border border-grey-light overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-grey-light/30 border-b border-grey-light">
-                        <tr>
-                            <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">User</th>
-                            <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Email</th>
-                            <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Role</th>
-                            <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Last Login</th>
-                            <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-grey-light">
-                        {filteredUsers.map((user) => (
-                            <tr key={user.id} className="hover:bg-grey-light/10 transition-colors">
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${getAvatarColor(user.role)}`}>
-                                            {user.fullName.charAt(0)}
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-bold text-dark-blue">{user.fullName}</div>
-                                            <div className="text-xs text-grey-mid">@{user.username}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 text-sm text-grey-dark">{user.email}</td>
-                                <td className="px-6 py-4">
-                                    <RoleBadge role={user.role} />
-                                </td>
-                                <td className="px-6 py-4">
-                                    <StatusBadge user={user} />
-                                </td>
-                                <td className="px-6 py-4 text-sm text-grey-mid">
-                                    {user.lastLogin ? format(new Date(user.lastLogin), 'MMM d, HH:mm') : 'Never'}
-                                </td>
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => { setEditingUser(user); setIsPanelOpen(true); }}
-                                            className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Edit"
-                                        >
-                                            <Edit2 size={16} />
-                                        </button>
-                                        {user.lockedUntil && new Date(user.lockedUntil) > new Date() && (
-                                            <button
-                                                onClick={() => handleUnlock(user.id)}
-                                                className="p-1.5 text-orange-600 hover:bg-orange-50 rounded transition-colors" title="Unlock"
-                                            >
-                                                <Unlock size={16} />
-                                            </button>
-                                        )}
-                                        <button
-                                            onClick={() => handleToggleStatus(user)}
-                                            className={`p-1.5 ${user.isActive ? 'text-grey-mid' : 'text-green-600'} hover:bg-opacity-10 rounded transition-colors`}
-                                            title={user.isActive ? 'Deactivate' : 'Activate'}
-                                        >
-                                            {user.isActive ? <UserX size={16} /> : <UserCheck size={16} />}
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(user.id)}
-                                            className="p-1.5 text-danger-red hover:bg-danger-red/10 rounded transition-colors" title="Delete"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                </td>
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full text-left">
+                        <thead className="bg-grey-light/30 border-b border-grey-light">
+                            <tr>
+                                <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">User</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Email</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Role</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Last Login</th>
+                                <th className="px-6 py-4 text-xs font-semibold text-grey-dark uppercase tracking-wider">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-grey-light">
+                            {filteredUsers.map((user) => (
+                                <tr key={user.id} className="hover:bg-grey-light/10 transition-colors">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${getAvatarColor(user.role)}`}>
+                                                {user.fullName.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-bold text-dark-blue">{user.fullName}</div>
+                                                <div className="text-xs text-grey-mid">@{user.username}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-grey-dark">{user.email}</td>
+                                    <td className="px-6 py-4">
+                                        <RoleBadge role={user.role} />
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <StatusBadge user={user} />
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-grey-mid">
+                                        {user.lastLogin ? format(new Date(user.lastLogin), 'MMM d, HH:mm') : 'Never'}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => { setEditingUser(user); setIsPanelOpen(true); }}
+                                                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Edit"
+                                            >
+                                                <Edit2 size={16} />
+                                            </button>
+                                            {user.lockedUntil && new Date(user.lockedUntil) > new Date() && (
+                                                <button
+                                                    onClick={() => handleUnlock(user.id)}
+                                                    className="p-1.5 text-orange-600 hover:bg-orange-50 rounded transition-colors" title="Unlock"
+                                                >
+                                                    <Unlock size={16} />
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={() => handleToggleStatus(user)}
+                                                className={`p-1.5 ${user.isActive ? 'text-grey-mid' : 'text-green-600'} hover:bg-opacity-10 rounded transition-colors`}
+                                                title={user.isActive ? 'Deactivate' : 'Activate'}
+                                            >
+                                                {user.isActive ? <UserX size={16} /> : <UserCheck size={16} />}
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(user.id)}
+                                                className="p-1.5 text-danger-red hover:bg-danger-red/10 rounded transition-colors" title="Delete"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden divide-y divide-grey-light">
+                    {filteredUsers.map((user) => (
+                        <div key={user.id} className="p-4">
+                            <div className="flex items-start gap-3">
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white flex-shrink-0 ${getAvatarColor(user.role)}`}>
+                                    {user.fullName.charAt(0)}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="font-bold text-dark-blue">{user.fullName}</div>
+                                    <div className="text-sm text-grey-mid">@{user.username}</div>
+                                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                        <RoleBadge role={user.role} />
+                                        <StatusBadge user={user} />
+                                    </div>
+                                    <div className="text-xs text-grey-mid mt-1">
+                                        Last login: {user.lastLogin ? format(new Date(user.lastLogin), 'MMM d, HH:mm') : 'Never'}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-grey-light">
+                                <button
+                                    onClick={() => { setEditingUser(user); setIsPanelOpen(true); }}
+                                    className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                    title="Edit"
+                                >
+                                    <Edit2 size={20} />
+                                </button>
+                                {user.lockedUntil && new Date(user.lockedUntil) > new Date() && (
+                                    <button
+                                        onClick={() => handleUnlock(user.id)}
+                                        className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-orange-600 hover:bg-orange-50 rounded transition-colors"
+                                        title="Unlock"
+                                    >
+                                        <Unlock size={20} />
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => handleToggleStatus(user)}
+                                    className={`min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded transition-colors ${user.isActive ? 'text-grey-mid hover:bg-grey-light/30' : 'text-green-600 hover:bg-green-50'}`}
+                                    title={user.isActive ? 'Deactivate' : 'Activate'}
+                                >
+                                    {user.isActive ? <UserX size={20} /> : <UserCheck size={20} />}
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(user.id)}
+                                    className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-danger-red hover:bg-danger-red/10 rounded transition-colors"
+                                    title="Delete"
+                                >
+                                    <Trash2 size={20} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 {filteredUsers.length === 0 && (
                     <div className="p-12 text-center text-grey-mid">
                         No users found matching your search.
@@ -239,26 +310,26 @@ export default function UsersPage() {
     )
 }
 
-function StatCard({ icon: Icon, label, value, color }: any) {
+function StatCard({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: number; color: string }) {
     const colors = {
         blue: 'border-blue-500 text-blue-600',
         green: 'border-green-500 text-green-600',
         red: 'border-red-500 text-red-600'
     }
     return (
-        <div className={`bg-white p-6 rounded-xl shadow-sm border-l-4 ${colors[color as keyof typeof colors]}`}>
-            <div className="flex justify-between items-center">
-                <div>
-                    <p className="text-sm font-medium text-grey-mid">{label}</p>
-                    <p className="text-3xl font-bold mt-1">{value}</p>
+        <div className={`bg-white p-4 md:p-6 rounded-xl shadow-sm border-l-4 max-h-[80px] md:max-h-none flex ${colors[color as keyof typeof colors]}`}>
+            <div className="flex justify-between items-center flex-1 min-w-0">
+                <div className="min-w-0">
+                    <p className="text-xs md:text-sm font-medium text-grey-mid truncate">{label}</p>
+                    <p className="text-2xl md:text-3xl font-bold mt-0.5 md:mt-1">{value}</p>
                 </div>
-                <Icon size={32} className="opacity-20" />
+                <Icon size={28} className="opacity-20 flex-shrink-0 md:w-8 md:h-8" />
             </div>
         </div>
     )
 }
 
-function StatusBadge({ user }: { user: any }) {
+function StatusBadge({ user }: { user: User }) {
     const isLocked = user.lockedUntil && new Date(user.lockedUntil) > new Date()
     if (isLocked) return <span className="bg-yellow-100 text-yellow-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Locked</span>
     if (user.isActive) return <span className="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Active</span>
@@ -271,7 +342,7 @@ function getAvatarColor(role: string) {
     return 'bg-grey-mid'
 }
 
-function UserPanel({ isOpen, onClose, user, onSuccess }: any) {
+function UserPanel({ isOpen, onClose, user, onSuccess }: { isOpen: boolean; onClose: () => void; user: User | null; onSuccess: () => void }) {
     const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<UserFormData>({
         resolver: zodResolver(userSchema),
         defaultValues: {
@@ -338,7 +409,7 @@ function UserPanel({ isOpen, onClose, user, onSuccess }: any) {
                 const err = await res.json()
                 toast.error(err.error || 'Operation failed')
             }
-        } catch (error) {
+        } catch {
             toast.error('Connection error')
         }
     }
@@ -359,14 +430,14 @@ function UserPanel({ isOpen, onClose, user, onSuccess }: any) {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl z-[70] border-l-4 border-brand-orange overflow-y-auto"
+                        className="fixed right-0 top-0 h-full w-full md:max-w-lg md:w-auto max-w-[100vw] bg-white shadow-2xl z-[70] border-l-4 border-brand-orange overflow-y-auto"
                     >
                         <div className="p-8">
                             <div className="flex justify-between items-center mb-8">
                                 <h2 className="text-2xl font-serif font-bold text-dark-blue">
                                     {user ? 'Edit User' : 'Add New User'}
                                 </h2>
-                                <button onClick={onClose} className="p-2 hover:bg-grey-light rounded-full"><X size={24} /></button>
+                                <button onClick={onClose} aria-label="Close panel" className="p-2 hover:bg-grey-light rounded-full"><X size={24} /></button>
                             </div>
 
                             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -473,7 +544,7 @@ function UserPanel({ isOpen, onClose, user, onSuccess }: any) {
     )
 }
 
-function RoleOption({ value, current, onSelect, title, desc }: any) {
+function RoleOption({ value, current, onSelect, title, desc }: { value: string; current: string; onSelect: () => void; title: string; desc: string }) {
     const selected = current === value
     return (
         <div

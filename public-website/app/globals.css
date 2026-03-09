@@ -130,6 +130,7 @@ h5 {
 
 .btn-outline-white {
   background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   color: white;
   padding: 12px 28px;
@@ -172,16 +173,16 @@ h5 {
 /* Glassmorphism */
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .glass-panel-dark {
   background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -242,4 +243,61 @@ h5 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #64748B;
+}
+
+/* ===========================
+   RESPONSIVE UTILITY CLASSES
+   =========================== */
+
+/* Desktop-only elements (hidden on mobile) */
+.hidden-mobile {
+  display: flex !important;
+}
+
+/* Mobile-only elements (hidden on desktop) */
+.show-mobile {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+  .show-mobile {
+    display: flex !important;
+  }
+}
+
+/* Nav link hover underline effect */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #FF6B1A;
+  border-radius: 1px;
+  transition: left 0.25s ease, right 0.25s ease;
+}
+
+.nav-link:hover::after {
+  left: 16px;
+  right: 16px;
+}
+
+/* Global overflow guards */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Consistent touch targets */
+button, a {
+  min-height: 44px;
+  min-width: 44px;
 }

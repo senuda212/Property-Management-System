@@ -2,22 +2,30 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Facebook, Instagram, Linkedin, MessageCircle, Phone, Mail, MapPin } from 'lucide-react'
+import { Facebook, Instagram, Linkedin, MessageCircle, Phone, Mail, MapPin, Youtube } from 'lucide-react'
 
-const quickLinks = ['Home', 'Properties', 'About Us', 'Contact Us', 'Blog']
-const quickHrefs = ['/', '/properties', '/about', '/contact', '#']
+const quickLinks = ['Home', 'Properties', 'About Us', 'Contact Us']
+const quickHrefs = ['/', '/properties', '/about', '/contact']
 
-const services = ['Real Estate Services', 'Property Management & Maintenance', 'Interior Designing']
+const services = [
+    'Real Estate',
+    'Property Management & Maintenance',
+    'Interior Designing',
+    'Tyre Sales',
+    'Low Services',
+]
 
 const socials = [
-    { icon: Facebook, href: 'https://facebook.com/ceylonrootsholdings', label: 'Facebook' },
-    { icon: Instagram, href: 'https://instagram.com/ceylonrootsholdings', label: 'Instagram' },
-    { icon: MessageCircle, href: 'https://wa.me/94777855554', label: 'WhatsApp' },
+    { icon: MessageCircle, href: 'https://wa.me/94777855554', label: 'WhatsApp', color: '#25D366' },
+    { icon: Facebook, href: 'https://facebook.com/ceylonrootsholdings', label: 'Facebook', color: '#1877F2' },
+    { icon: Youtube, href: 'https://youtube.com/@ceylonrootsholdings', label: 'YouTube', color: '#FF0000' },
+    { icon: Instagram, href: 'https://instagram.com/ceylonrootsholdings', label: 'Instagram', color: '#E1306C' },
+    { icon: Linkedin, href: 'https://linkedin.com/company/ceylonrootsholdings', label: 'LinkedIn', color: '#0A66C2' },
 ]
 
 export default function Footer() {
     return (
-        <footer style={{ backgroundColor: '#0F172A', color: 'white', position: 'relative', overflow: 'hidden' }}>
+        <footer style={{ backgroundColor: '#0B1F3A', color: 'white', position: 'relative', overflow: 'hidden' }}>
             {/* Grid Pattern Overlay */}
             <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px', opacity: 0.5 }} />
 
@@ -50,35 +58,39 @@ export default function Footer() {
                                 </span>
                             </div>
                         </div>
-                        <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', color: '#94A3B8', lineHeight: 1.6, marginBottom: '8px', maxWidth: '300px' }}>
+                        <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', color: '#FF6B1A', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '8px', maxWidth: '300px' }}>
                             Rooting For You
                         </p>
                         <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#64748B', lineHeight: 1.6, marginBottom: '32px', maxWidth: '300px' }}>
                             We connect buyers, sellers and renters with premium properties across Sri Lanka, delivering exceptional service and trusted expertise.
                         </p>
-                        <div style={{ display: 'flex', gap: '12px' }}>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                             {socials.map(({ icon: Icon, href, label }) => (
                                 <a
                                     key={label}
                                     href={href}
                                     aria-label={label}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="social-btn"
                                     style={{
                                         width: '40px',
                                         height: '40px',
-                                        borderRadius: '12px',
-                                        background: 'rgba(255,255,255,0.05)',
-                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        borderRadius: '10px',
+                                        background: 'rgba(255,255,255,0.06)',
+                                        border: '1px solid rgba(255,255,255,0.12)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         transition: 'all 0.3s ease',
                                         cursor: 'pointer',
                                         textDecoration: 'none',
-                                        color: '#E2E8F0'
+                                        color: '#E2E8F0',
+                                        minHeight: '40px',
+                                        minWidth: '40px',
                                     }}
                                 >
-                                    <Icon size={18} />
+                                    <Icon size={17} />
                                 </a>
                             ))}
                         </div>

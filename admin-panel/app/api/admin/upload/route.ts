@@ -36,8 +36,8 @@ export async function POST(req: NextRequest) {
         // Log the activity
         await logActivity(
             req,
-            Number((session.user as any).id),
-            (session.user as any).username,
+            Number(session.user.id),
+            session.user.username,
             'UPLOAD_IMAGE',
             `Uploaded ${files.length} images`
         )

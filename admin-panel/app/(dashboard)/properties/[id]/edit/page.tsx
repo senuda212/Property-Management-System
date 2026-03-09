@@ -22,7 +22,7 @@ export default async function EditPropertyPage({ params }: { params: Promise<{ i
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-serif font-bold text-dark-blue">Edit Property</h1>
-                    <p className="text-grey-mid text-sm">Update property details for "{property.title}"</p>
+                    <p className="text-grey-mid text-sm">Update property details for &ldquo;{property.title}&rdquo;</p>
                 </div>
             </div>
 

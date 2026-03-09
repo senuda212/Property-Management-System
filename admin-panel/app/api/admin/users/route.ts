@@ -4,8 +4,8 @@ import { requireAuth, logActivity } from '@/lib/apiAuth'
 import { sanitizeObject } from '@/lib/sanitize'
 import bcrypt from 'bcryptjs'
 
-export async function GET(req: NextRequest) {
-    const { user, error } = await requireAuth('VIEW_USERS')
+export async function GET() {
+    const { error } = await requireAuth('VIEW_USERS')
     if (error) return error
 
     try {
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
         })
 
         return NextResponse.json(users)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 })
     }
 }

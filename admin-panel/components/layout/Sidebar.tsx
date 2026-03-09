@@ -34,6 +34,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: bo
     const [internalMobileOpen, setInternalMobileOpen] = useState(false)
     const isMobileOpen = mobileOpen !== undefined ? mobileOpen : internalMobileOpen
     const setIsMobileOpen = setMobileOpen || setInternalMobileOpen
+    const { data: session } = useSession()
+    const role = session?.user?.role as string
 
     return (
         <>
@@ -63,8 +65,6 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: bo
             <nav className="mt-6 flex-1">
                 <ul className="space-y-1">
                     {navItems.map((item) => {
-                        const { data: session } = useSession()
-                        const role = session?.user?.role as string
                         const isActive = pathname.startsWith(item.href)
 
                         if (item.adminOnly && role !== 'admin') {
@@ -125,15 +125,13 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: bo
                     <p className="text-grey-mid text-xs">Ceylon Roots Holdings</p>
                     <p className="text-grey-mid text-[10px] mt-0.5">Admin Panel</p>
                 </div>
-                <button onClick={() => setIsMobileOpen(false)} className="p-1 hover:bg-mid-blue rounded transition-colors text-white">
+                <button onClick={() => setIsMobileOpen(false)} aria-label="Close navigation menu" className="p-1 hover:bg-mid-blue rounded transition-colors text-white">
                     <X size={20} />
                 </button>
             </div>
             <nav className="mt-6 flex-1 overflow-y-auto">
                 <ul className="space-y-1">
                     {navItems.map((item) => {
-                        const { data: session } = useSession()
-                        const role = session?.user?.role as string
                         const isActive = pathname.startsWith(item.href)
                         if (item.adminOnly && role !== 'admin') return null
                         return (

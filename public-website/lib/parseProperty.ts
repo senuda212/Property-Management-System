@@ -10,7 +10,13 @@ export function parsePropertyArrayField(field: unknown): string[] {
   return []
 }
 
-export function parseProperty(property: any) {
+interface RawProperty {
+  images?: unknown
+  features?: unknown
+  [key: string]: unknown
+}
+
+export function parseProperty(property: RawProperty | null) {
   if (!property) return null
   return {
     ...property,
@@ -19,6 +25,6 @@ export function parseProperty(property: any) {
   }
 }
 
-export function parseProperties(properties: any[]) {
+export function parseProperties(properties: RawProperty[]) {
   return properties.map(parseProperty)
 }

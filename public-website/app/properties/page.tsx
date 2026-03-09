@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Home, ChevronRight, Search, X } from 'lucide-react'
 import PropertyCard from '@/components/properties/PropertyCard'
@@ -56,6 +55,7 @@ function PropertiesContent() {
     const [status, setStatus] = useState(searchParams.get('status') || '')
     const [bedrooms, setBedrooms] = useState('Any')
     const [priceRange, setPriceRange] = useState(0)
+    const [filtersOpen, setFiltersOpen] = useState(false)
 
     const fetchProperties = useCallback(async () => {
         setLoading(true)
@@ -72,7 +72,7 @@ function PropertiesContent() {
             const res = await fetch(`/api/properties?${params.toString()}`)
             if (!res.ok) throw new Error()
             const data = await res.json()
-            setProperties(parseProperties(Array.isArray(data) ? data : []))
+            setProperties(parseProperties(Array.isArray(data) ? data : []).filter((p): p is Property => p !== null))
             setPage(1)
         } catch {
             setError(true)
@@ -118,25 +118,35 @@ function PropertiesContent() {
 
             {/* Sticky Filters */}
             <div style={{ position: 'sticky', top: '72px', zIndex: 40, backgroundColor: 'white', boxShadow: '0 4px 20px rgba(11,31,58,0.1)', padding: '16px 24px' }} className="filters-bar">
-                <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }} className="filters-container">
-                    <select value={city} onChange={e => setCity(e.target.value)} style={selectStyle}>
+                {/* Mobile-only toggle row */}
+                <div className="filters-mobile-header" style={{ display: 'none', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <button
+                        onClick={() => setFiltersOpen(f => !f)}
+                        style={{ background: filtersOpen ? '#F5F7FA' : 'linear-gradient(90deg, #FF6B1A, #FF9500)', color: filtersOpen ? '#0B1F3A' : 'white', border: '2px solid transparent', borderColor: filtersOpen ? '#E8ECF0' : 'transparent', borderRadius: '8px', padding: '10px 18px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', minHeight: '44px' }}
+                    >
+                        <Search size={16} /> {filtersOpen ? 'Hide Filters' : '🔍 Search & Filter'}
+                    </button>
+                    {!loading && <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#9AA3AF' }}>Showing {properties.length} properties</span>}
+                </div>
+                <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }} className={`filters-container${filtersOpen ? ' filters-visible' : ''}`}>
+                    <select aria-label="Filter by location" value={city} onChange={e => setCity(e.target.value)} style={selectStyle}>
                         {cities.map(c => <option key={c}>{c}</option>)}
                     </select>
-                    <select value={type} onChange={e => setType(e.target.value)} style={selectStyle}>
+                    <select aria-label="Filter by property type" value={type} onChange={e => setType(e.target.value)} style={selectStyle}>
                         {types.map(t => <option key={t}>{t}</option>)}
                     </select>
-                    <select value={status} onChange={e => setStatus(e.target.value)} style={selectStyle}>
+                    <select aria-label="Filter by listing status" value={status} onChange={e => setStatus(e.target.value)} style={selectStyle}>
                         <option value="">All Status</option>
                         <option>For Sale</option>
                         <option>For Rent</option>
                     </select>
-                    <select value={String(priceRange)} onChange={e => setPriceRange(Number(e.target.value))} style={selectStyle}>
+                    <select aria-label="Filter by price range" value={String(priceRange)} onChange={e => setPriceRange(Number(e.target.value))} style={selectStyle}>
                         {priceRanges.map((r, i) => <option key={r.label} value={i}>{r.label}</option>)}
                     </select>
-                    <select value={bedrooms} onChange={e => setBedrooms(e.target.value)} style={selectStyle}>
+                    <select aria-label="Filter by bedrooms" value={bedrooms} onChange={e => setBedrooms(e.target.value)} style={selectStyle}>
                         {bedroomOptions.map(b => <option key={b}>{b}</option>)}
                     </select>
-                    <button onClick={fetchProperties} style={{ background: 'linear-gradient(90deg, #FF6B1A, #FF9500)', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 20px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <button onClick={() => { fetchProperties(); setFiltersOpen(false); }} style={{ background: 'linear-gradient(90deg, #FF6B1A, #FF9500)', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 20px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Search size={16} /> Search
                     </button>
                     <button onClick={handleReset} style={{ background: 'none', border: 'none', color: '#9AA3AF', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -189,13 +199,20 @@ function PropertiesContent() {
                 </div>
             </section>
             <style jsx>{`
+                .filters-mobile-header { display: none; }
                 @media (max-width: 768px) {
+                    .filters-mobile-header { display: flex !important; }
                     .filters-bar {
                         padding: 12px 16px !important;
                     }
                     .filters-container {
+                        display: none !important;
                         flex-direction: column !important;
                         gap: 12px !important;
+                        margin-top: 12px !important;
+                    }
+                    .filters-container.filters-visible {
+                        display: flex !important;
                     }
                     .filters-container select {
                         width: 100% !important;

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { MapPin, Bed, Bath, Square, Car, Heart, ArrowRight } from 'lucide-react'
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight } from 'lucide-react'
 import { parsePropertyArrayField } from '@/lib/parseProperty'
 
 interface Property {
@@ -41,7 +41,6 @@ function formatPrice(price: number): string {
 export default function PropertyCard({ property, index = 0 }: PropertyCardProps) {
     const [saved, setSaved] = useState(false)
     const safeImages = parsePropertyArrayField(property.images)
-    const safeFeatures = parsePropertyArrayField(property.features)
     const imageUrl = safeImages[0] || null
 
     const statusColor = property.status === 'For Sale'
@@ -91,7 +90,8 @@ export default function PropertyCard({ property, index = 0 }: PropertyCardProps)
                 {/* Bookmark */}
                 <button
                     onClick={(e) => { e.preventDefault(); setSaved(!saved) }}
-                    style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                    aria-label={saved ? 'Remove from saved' : 'Save property'}
+                    style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 >

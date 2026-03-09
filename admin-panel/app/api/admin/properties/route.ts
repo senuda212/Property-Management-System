@@ -1,10 +1,11 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth, logActivity } from '@/lib/apiAuth'
 import { sanitizeObject } from '@/lib/sanitize'
 
 export async function GET(req: NextRequest) {
-    const { user, error } = await requireAuth('VIEW_PROPERTIES')
+    const { error } = await requireAuth('VIEW_PROPERTIES')
     if (error) return error
 
     try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
         const isActive = searchParams.get('isActive')
         const search = searchParams.get('search')
 
-        const where: any = {}
+        const where: Prisma.PropertyWhereInput = {}
         if (type && type !== 'All') where.type = type
         if (status && status !== 'All') where.status = status
         if (isActive !== null && isActive !== 'All') where.isActive = isActive === 'true'
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
         })
 
         return NextResponse.json(properties)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 })
     }
 }

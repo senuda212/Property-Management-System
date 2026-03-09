@@ -36,7 +36,7 @@ export default function Header() {
                     left: 0,
                     right: 0,
                     zIndex: 50,
-                    backgroundColor: scrolled ? 'rgba(15, 23, 42, 0.85)' : 'transparent', // Slate 900
+                    backgroundColor: scrolled ? 'rgba(11, 31, 58, 0.92)' : 'rgba(11, 31, 58, 0.6)', // #0B1F3A
                     backdropFilter: scrolled ? 'blur(16px)' : 'none',
                     WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
                     borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
@@ -112,7 +112,7 @@ export default function Header() {
                             {/* Mobile hamburger */}
                             <button
                                 onClick={() => setMobileOpen(true)}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'white', padding: '4px', display: 'none' }}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'white', padding: '8px', minHeight: '44px', minWidth: '44px', display: 'none' }}
                                 className="show-mobile"
                                 aria-label="Open menu"
                             >
@@ -134,7 +134,7 @@ export default function Header() {
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            backgroundColor: '#0F172A', // Slate 900
+                            backgroundColor: '#0B1F3A',
                             zIndex: 100,
                             display: 'flex',
                             flexDirection: 'column',
@@ -152,30 +152,34 @@ export default function Header() {
                             </div>
                             <button
                                 onClick={() => setMobileOpen(false)}
-                                style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
+                                aria-label="Close menu"
+                                style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}
                             >
                                 <X size={20} />
                             </button>
                         </div>
-                        <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             {navLinks.map((link, i) => (
                                 <motion.div
                                     key={link.href}
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: i * 0.05 + 0.1, duration: 0.3 }}
+                                    style={{ width: '100%', textAlign: 'center' }}
                                 >
                                     <Link
                                         href={link.href}
                                         onClick={() => setMobileOpen(false)}
                                         style={{
-                                            display: 'block',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            minHeight: '56px',
                                             fontFamily: 'Playfair Display, serif',
-                                            fontSize: '32px',
-                                            fontWeight: 500,
-                                            color: pathname === link.href ? '#F97316' : 'white',
+                                            fontSize: '28px',
+                                            fontWeight: 600,
+                                            color: pathname === link.href ? '#FF6B1A' : 'white',
                                             textDecoration: 'none',
-                                            paddingBottom: '8px',
                                         }}
                                     >
                                         {link.label}
@@ -183,7 +187,7 @@ export default function Header() {
                                 </motion.div>
                             ))}
                         </nav>
-                        <div style={{ marginTop: 'auto' }}>
+                        <div style={{ marginTop: '32px', paddingBottom: '16px' }}>
                             <Link
                                 href="/contact"
                                 onClick={() => setMobileOpen(false)}
@@ -195,6 +199,7 @@ export default function Header() {
                                     textDecoration: 'none',
                                     padding: '16px',
                                     fontSize: '16px',
+                                    minHeight: '56px',
                                 }}
                             >
                                 List Your Property

@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/apiAuth'
 
 export async function GET(req: NextRequest) {
-    const { user, error } = await requireAuth('VIEW_INQUIRIES')
+    const { error } = await requireAuth('VIEW_INQUIRIES')
     if (error) return error
 
     try {
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
         const status = searchParams.get('status')
         const search = searchParams.get('search')
 
-        const where: any = {}
+        const where: Prisma.InquiryWhereInput = {}
         if (status && status !== 'All') where.status = status
         if (search) {
             where.OR = [
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
         })
 
         return NextResponse.json(inquiries)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch inquiries' }, { status: 500 })
     }
 }

@@ -160,16 +160,16 @@ export default function PropertyGallery({ images, title }: GalleryProps) {
                         exit={{ opacity: 0 }}
                         style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                        <button onClick={() => setLightboxOpen(false)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
+                        <button aria-label="Close gallery" onClick={() => setLightboxOpen(false)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
                             <X size={22} />
                         </button>
-                        <button onClick={() => setCurrentIndex(i => (i - 1 + safeImages.length) % safeImages.length)} style={{ position: 'absolute', left: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
+                        <button aria-label="Previous image" onClick={() => setCurrentIndex(i => (i - 1 + safeImages.length) % safeImages.length)} style={{ position: 'absolute', left: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
                             <ChevronLeft size={24} />
                         </button>
                         <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '85vh', width: '900px', aspectRatio: '16/9' }}>
                             <Image src={safeImages[currentIndex]} alt={title} fill style={{ objectFit: 'contain' }} />
                         </div>
-                        <button onClick={() => setCurrentIndex(i => (i + 1) % safeImages.length)} style={{ position: 'absolute', right: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
+                        <button aria-label="Next image" onClick={() => setCurrentIndex(i => (i + 1) % safeImages.length)} style={{ position: 'absolute', right: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
                             <ChevronRight size={24} />
                         </button>
                         <div style={{ position: 'absolute', bottom: '20px', color: 'white', fontFamily: 'DM Sans, sans-serif', fontSize: '14px' }}>

@@ -9,13 +9,12 @@ import {
     Star,
     Loader2,
     Search,
-    Filter,
     Building2
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function PropertyTable() {
-    const [properties, setProperties] = useState([])
+    const [properties, setProperties] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [filters, setFilters] = useState({
         search: '',
@@ -40,7 +39,7 @@ export default function PropertyTable() {
                     toast.error(data.error)
                 }
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to load properties')
         } finally {
             setIsLoading(false)
@@ -49,6 +48,7 @@ export default function PropertyTable() {
 
     useEffect(() => {
         fetchProperties()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters.type, filters.status, filters.isActive])
 
     const handleDelete = async (id: number) => {
@@ -60,7 +60,7 @@ export default function PropertyTable() {
                 toast.success('Property deleted')
                 fetchProperties()
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete property')
         }
     }
@@ -73,16 +73,16 @@ export default function PropertyTable() {
             })
             toast.success('Property updated')
             fetchProperties()
-        } catch (error) {
+        } catch {
             toast.error('Failed to update property')
         }
     }
 
     return (
         <div className="space-y-6">
-            {/* Search & Filter Bar */}
-            <div className="bg-white p-4 rounded-xl shadow-sm flex flex-wrap gap-4 items-center">
-                <div className="relative flex-1 min-w-[200px]">
+            {/* Search & Filter Bar — stacked full width on mobile */}
+            <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row flex-wrap gap-4 items-stretch md:items-center">
+                <div className="relative flex-1 min-w-0 w-full md:min-w-[200px]">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-grey-mid" size={18} />
                     <input
                         type="text"
@@ -95,7 +95,8 @@ export default function PropertyTable() {
                 </div>
 
                 <select
-                    className="bg-off-white border border-grey-light rounded-lg py-2 px-4 text-sm focus:outline-none"
+                    aria-label="Filter by property type"
+                    className="w-full md:w-auto bg-off-white border border-grey-light rounded-lg py-2 px-4 text-sm focus:outline-none"
                     value={filters.type}
                     onChange={(e) => setFilters({ ...filters, type: e.target.value })}
                 >
@@ -108,7 +109,8 @@ export default function PropertyTable() {
                 </select>
 
                 <select
-                    className="bg-off-white border border-grey-light rounded-lg py-2 px-4 text-sm focus:outline-none"
+                    aria-label="Filter by listing status"
+                    className="w-full md:w-auto bg-off-white border border-grey-light rounded-lg py-2 px-4 text-sm focus:outline-none"
                     value={filters.status}
                     onChange={(e) => setFilters({ ...filters, status: e.target.value })}
                 >
@@ -120,7 +122,7 @@ export default function PropertyTable() {
 
                 <button
                     onClick={fetchProperties}
-                    className="bg-dark-blue text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-mid-blue transition-colors"
+                    className="w-full md:w-auto bg-brand-orange text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-brand-orange/90 transition-colors"
                 >
                     Search
                 </button>
@@ -156,6 +158,7 @@ export default function PropertyTable() {
                                         <div className="flex items-center space-x-3">
                                             <div className="h-10 w-10 bg-grey-light rounded overflow-hidden">
                                                 {JSON.parse(prop.images || '[]')[0] ? (
+                                                    // eslint-disable-next-line @next/next/no-img-element
                                                     <img src={JSON.parse(prop.images || '[]')[0]} alt="" className="h-full w-full object-cover" />
                                                 ) : (
                                                     <div className="h-full w-full flex items-center justify-center text-grey-mid"><Building2 size={16} /></div>
@@ -183,7 +186,7 @@ export default function PropertyTable() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        <button onClick={() => toggleFeatured(prop.id, prop.isFeatured)}>
+                                        <button onClick={() => toggleFeatured(prop.id, prop.isFeatured)} aria-label={prop.isFeatured ? 'Remove featured' : 'Mark as featured'}>
                                             <Star size={18} className={prop.isFeatured ? 'text-warning-yellow fill-warning-yellow' : 'text-grey-mid'} />
                                         </button>
                                     </td>
@@ -213,54 +216,55 @@ export default function PropertyTable() {
                     </table>
                 </div>
                 
-                {/* Mobile Card View */}
+                {/* Mobile Card View — 60x60 thumbnail, title/city/price/status/toggle, full-width action row */}
                 <div className="md:hidden divide-y divide-grey-light">
                     {isLoading ? (
                         <div className="p-8 text-center">
                             <Loader2 className="animate-spin mx-auto text-brand-orange" size={40} />
                         </div>
-                    ) : properties.map((prop: any, idx) => (
-                        <div key={prop.id} className="p-4 space-y-3">
-                            <div className="flex items-start justify-between">
-                                <div className="flex items-center space-x-3 flex-1">
-                                    <div className="h-12 w-12 bg-grey-light rounded overflow-hidden flex-shrink-0">
-                                        {JSON.parse(prop.images || '[]')[0] ? (
-                                            <img src={JSON.parse(prop.images || '[]')[0]} alt="" className="h-full w-full object-cover" />
-                                        ) : (
-                                            <div className="h-full w-full flex items-center justify-center text-grey-mid"><Building2 size={20} /></div>
-                                        )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-bold text-dark-blue truncate">{prop.title}</p>
-                                        <p className="text-xs text-grey-mid">{prop.city}</p>
-                                        <p className="text-sm font-bold text-dark-blue mt-1">LKR {prop.price.toLocaleString()}</p>
+                    ) : properties.map((prop: any) => (
+                        <div key={prop.id} className="p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="h-[60px] w-[60px] rounded-l overflow-hidden flex-shrink-0 bg-grey-light">
+                                    {JSON.parse(prop.images || '[]')[0] ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src={JSON.parse(prop.images || '[]')[0]} alt="" className="h-full w-full object-cover" />
+                                    ) : (
+                                        <div className="h-full w-full flex items-center justify-center text-grey-mid"><Building2 size={24} /></div>
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-bold text-dark-blue truncate">{prop.title}</p>
+                                    <p className="text-xs text-grey-mid">{prop.city}</p>
+                                    <p className="text-sm font-bold text-brand-orange mt-0.5">LKR {prop.price.toLocaleString()}</p>
+                                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${prop.status === 'For Sale' ? 'bg-brand-orange/10 text-brand-orange' :
+                                            prop.status === 'For Rent' ? 'bg-success-green/10 text-success-green' : 'bg-grey-mid/10 text-grey-mid'
+                                        }`}>
+                                            {prop.status}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => {}}
+                                            className="min-h-[44px] min-w-[44px] flex items-center justify-center"
+                                            aria-label={prop.isActive ? 'Active' : 'Inactive'}
+                                        >
+                                            <div className={`h-5 w-10 rounded-full transition-colors cursor-pointer ${prop.isActive ? 'bg-success-green' : 'bg-grey-mid'}`}>
+                                                <div className={`h-3 w-3 bg-white rounded-full transition-all mt-1 ${prop.isActive ? 'ml-6' : 'ml-1'}`} />
+                                            </div>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${prop.status === 'For Sale' ? 'bg-brand-orange/10 text-brand-orange' :
-                                    prop.status === 'For Rent' ? 'bg-success-green/10 text-success-green' : 'bg-grey-mid/10 text-grey-mid'
-                                }`}>
-                                    {prop.status}
-                                </span>
-                                <div className="flex items-center gap-4">
-                                    <div className={`h-5 w-10 rounded-full transition-colors ${prop.isActive ? 'bg-success-green' : 'bg-grey-mid'}`}>
-                                        <div className={`h-3 w-3 bg-white rounded-full transition-all mt-1 ${prop.isActive ? 'ml-6' : 'ml-1'}`} />
-                                    </div>
-                                    <button onClick={() => toggleFeatured(prop.id, prop.isFeatured)} className="p-1">
-                                        <Star size={18} className={prop.isFeatured ? 'text-warning-yellow fill-warning-yellow' : 'text-grey-mid'} />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="flex items-center justify-end gap-3 pt-2 border-t border-grey-light">
-                                <Link href={`/properties/${prop.id}/edit`} className="text-mid-blue hover:text-brand-orange transition-colors p-2">
-                                    <Edit size={18} />
+                            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-grey-light w-full">
+                                <Link href={`/properties/${prop.id}/edit`} className="flex-1 min-h-[44px] flex items-center justify-center text-mid-blue hover:text-brand-orange transition-colors font-medium text-sm">
+                                    Edit
                                 </Link>
-                                <a href={`http://localhost:4000/properties/${prop.id}`} target="_blank" className="text-grey-dark hover:text-dark-blue transition-colors p-2">
-                                    <Eye size={18} />
+                                <a href={`http://localhost:4000/property/${prop.id}`} target="_blank" rel="noreferrer" className="flex-1 min-h-[44px] flex items-center justify-center text-grey-dark hover:text-dark-blue transition-colors font-medium text-sm">
+                                    View
                                 </a>
-                                <button onClick={() => handleDelete(prop.id)} className="text-danger-red hover:scale-110 transition-transform p-2">
-                                    <Trash2 size={18} />
+                                <button onClick={() => handleDelete(prop.id)} className="flex-1 min-h-[44px] flex items-center justify-center text-danger-red font-medium text-sm">
+                                    Delete
                                 </button>
                             </div>
                         </div>

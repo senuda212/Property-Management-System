@@ -1,11 +1,7 @@
 import {
-    Building,
-    CheckCircle,
     Mail,
-    Star,
     Plus,
     ExternalLink,
-    Users,
     Clock
 } from 'lucide-react'
 import Link from 'next/link'
@@ -124,7 +120,7 @@ export default async function DashboardPage() {
 }
 
 function ActionTinyBadge({ action }: { action: string }) {
-    const config: any = {
+    const config: Record<string, string> = {
         LOGIN: 'bg-green-500',
         LOGOUT: 'bg-grey-mid',
         FAILED_LOGIN: 'bg-danger-red',

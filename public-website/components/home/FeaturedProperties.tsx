@@ -98,9 +98,8 @@ export default function FeaturedProperties() {
                 <div style={{ textAlign: 'center', marginTop: '48px' }}>
                     <Link
                         href="/properties"
-                        style={{ display: 'inline-block', padding: '14px 36px', border: '2px solid #0B1F3A', borderRadius: '8px', fontFamily: 'DM Sans, sans-serif', fontSize: '15px', fontWeight: 700, color: '#0B1F3A', textDecoration: 'none', transition: 'all 0.3s' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#0B1F3A'; (e.currentTarget as HTMLAnchorElement).style.color = 'white' }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLAnchorElement).style.color = '#0B1F3A' }}
+                        className="btn-orange"
+                        style={{ textDecoration: 'none', padding: '14px 40px', fontSize: '15px', fontWeight: 700 }}
                     >
                         View All Properties →
                     </Link>

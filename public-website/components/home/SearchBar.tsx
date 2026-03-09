@@ -15,6 +15,7 @@ const priceRanges = [
     { label: 'LKR 30M – 50M', value: '30000000-50000000' },
     { label: 'Above LKR 50M', value: '50000000-' },
 ]
+const bedroomOptions = ['Any Beds', '1+', '2+', '3+', '4+', '5+']
 
 const selectStyle: React.CSSProperties = {
     fontFamily: 'DM Sans, sans-serif',
@@ -36,6 +37,7 @@ export default function SearchBar() {
     const [type, setType] = useState('')
     const [status, setStatus] = useState('')
     const [price, setPrice] = useState('')
+    const [bedrooms, setBedrooms] = useState('')
 
     const handleSearch = () => {
         const params = new URLSearchParams()
@@ -47,6 +49,7 @@ export default function SearchBar() {
             if (min) params.set('minPrice', min)
             if (max) params.set('maxPrice', max)
         }
+        if (bedrooms && bedrooms !== 'Any Beds') params.set('bedrooms', bedrooms.replace('+', ''))
         router.push(`/properties?${params.toString()}`)
     }
 
@@ -63,18 +66,21 @@ export default function SearchBar() {
             maxWidth: '900px',
             width: '100%',
         }}>
-            <select value={location} onChange={e => setLocation(e.target.value)} style={selectStyle}>
+            <select aria-label="Location" value={location} onChange={e => setLocation(e.target.value)} style={selectStyle}>
                 {locations.map(l => <option key={l} value={l}>{l}</option>)}
             </select>
-            <select value={type} onChange={e => setType(e.target.value)} style={selectStyle}>
+            <select aria-label="Property type" value={type} onChange={e => setType(e.target.value)} style={selectStyle}>
                 {types.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
-            <select value={status} onChange={e => setStatus(e.target.value)} style={selectStyle}>
+            <select aria-label="Listing status" value={status} onChange={e => setStatus(e.target.value)} style={selectStyle}>
                 <option value="">All Status</option>
                 {statuses.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
-            <select value={price} onChange={e => setPrice(e.target.value)} style={selectStyle}>
+            <select aria-label="Price range" value={price} onChange={e => setPrice(e.target.value)} style={selectStyle}>
                 {priceRanges.map(r => <option key={r.label} value={r.value}>{r.label}</option>)}
+            </select>
+            <select aria-label="Bedrooms" value={bedrooms} onChange={e => setBedrooms(e.target.value)} style={selectStyle}>
+                {bedroomOptions.map(b => <option key={b} value={b}>{b}</option>)}
             </select>
             <button
                 onClick={handleSearch}

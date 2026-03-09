@@ -1,5 +1,5 @@
 import React from 'react'
-import { Crown, Briefcase, User, ShieldCheck } from 'lucide-react'
+import { Crown, Briefcase, User } from 'lucide-react'
 import { Role } from '@/lib/permissions'
 
 interface RoleBadgeProps {

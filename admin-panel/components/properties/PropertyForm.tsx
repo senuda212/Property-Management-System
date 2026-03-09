@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm, SubmitHandler, Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import {
@@ -68,12 +68,11 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
     const {
         register,
         handleSubmit,
-        control,
         watch,
         setValue,
         formState: { errors },
     } = useForm<PropertyFormValues>({
-        resolver: zodResolver(propertySchema),
+        resolver: zodResolver(propertySchema) as unknown as Resolver<PropertyFormValues>,
         defaultValues: initialData ? {
             title: initialData.title || '',
             description: initialData.description || '',
@@ -155,7 +154,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
             } else {
                 toast.error('Failed to save property')
             }
-        } catch (error) {
+        } catch {
             toast.error('An error occurred')
         } finally {
             setIsSubmitting(false)
@@ -264,6 +263,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
                             <div>
                                 <label className="block text-sm font-medium text-dark-blue mb-1">Currency</label>
                                 <input
+                                    aria-label="Currency"
                                     value="LKR"
                                     disabled
                                     className="w-full bg-grey-light/50 border border-grey-light rounded-lg py-2 px-4 text-grey-mid cursor-not-allowed"
@@ -436,7 +436,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
                             {watchedValues.features.map((feature, idx) => (
                                 <span key={idx} className="bg-brand-orange/10 text-brand-orange px-3 py-1 rounded-full text-sm font-medium flex items-center">
                                     {feature}
-                                    <button type="button" onClick={() => removeFeature(idx)} className="ml-2 hover:text-dark-blue">
+                                    <button type="button" onClick={() => removeFeature(idx)} aria-label={`Remove ${feature}`} className="ml-2 hover:text-dark-blue">
                                         <X size={14} />
                                     </button>
                                 </span>
@@ -530,6 +530,7 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
                         <div className="bg-off-white rounded-lg overflow-hidden border border-grey-light group">
                             <div className="h-40 bg-grey-light relative">
                                 {watchedValues.images && watchedValues.images[0] ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img src={watchedValues.images[0]} alt="" className="h-full w-full object-cover" />
                                 ) : (
                                     <div className="h-full w-full flex items-center justify-center text-grey-mid">

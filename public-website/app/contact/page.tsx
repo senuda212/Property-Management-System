@@ -21,7 +21,7 @@ const contactCards = [
     { icon: Phone, label: 'Phone', value: '+94 717 555 572', href: 'tel:+94717555572' },
     { icon: Mail, label: 'Email', value: 'ceylonrootsh@gmail.com', href: 'mailto:ceylonrootsh@gmail.com' },
     { icon: MapPin, label: 'Address', value: '231/4, Rosegarden Road, Wattegedara Rd, Maharagama', href: undefined },
-    { icon: Clock, label: 'Hours', value: 'Mon–Fri: 8:30am–5:30pm | Sat: 9am–1pm', href: undefined },
+    { icon: Clock, label: 'Hours', value: 'Mon–Fri: 9AM–6PM | Sat: 9AM–3PM | Sun: Closed', href: undefined },
 ]
 
 export default function ContactPage() {
@@ -136,7 +136,7 @@ export default function ContactPage() {
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#9AA3AF', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>WhatsApp</p>
-                                    <a href="https://wa.me/94777855554" target="_blank" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#25D366', fontWeight: 700, textDecoration: 'none' }}>
+                                    <a href="https://wa.me/94777855554" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#25D366', fontWeight: 700, textDecoration: 'none' }}>
                                         Click to Chat on WhatsApp →
                                     </a>
                                 </div>

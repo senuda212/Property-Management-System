@@ -5,7 +5,7 @@ import { sanitizeObject } from '@/lib/sanitize'
 import bcrypt from 'bcryptjs'
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const { user, error } = await requireAuth('VIEW_USERS')
+    const { error } = await requireAuth('VIEW_USERS')
     if (error) return error
 
     try {
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         if (!targetUser) return NextResponse.json({ error: 'User not found' }, { status: 404 })
 
         return NextResponse.json(targetUser)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch user' }, { status: 500 })
     }
 }
@@ -61,7 +61,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
             }
         }
 
-        const updateData: any = {
+        const updateData: { fullName: string; email: string; role: string; isActive: boolean; passwordHash?: string } = {
             fullName: sanitizedData.fullName,
             email: sanitizedData.email,
             role: sanitizedData.role,
@@ -81,7 +81,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
         const { passwordHash: _, ...userWithoutPassword } = updatedUser
         return NextResponse.json(userWithoutPassword)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to update user' }, { status: 500 })
     }
 }
@@ -115,7 +115,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         await logActivity(req, Number(user.id), user.username, 'DELETE_USER', `Deleted user: ${targetUser.username}`)
 
         return NextResponse.json({ message: 'User deleted' })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 })
     }
 }

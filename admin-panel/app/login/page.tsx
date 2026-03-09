@@ -45,7 +45,7 @@ export default function LoginPage() {
                 toast.success('Welcome back, Admin!')
                 router.push('/dashboard')
             }
-        } catch (error) {
+        } catch {
             toast.error('An error occurred. Please try again.')
         } finally {
             setIsLoading(false)

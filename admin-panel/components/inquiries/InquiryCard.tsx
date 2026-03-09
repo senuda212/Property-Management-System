@@ -59,7 +59,7 @@ export default function InquiryCard({ inquiry, onView, onUpdateStatus }: Inquiry
 
             <div className="bg-off-white p-3 rounded-lg mb-6 group-hover:bg-grey-light/30 transition-colors">
                 <p className="text-xs text-grey-dark italic line-clamp-2">
-                    "{inquiry.message}"
+                    &ldquo;{inquiry.message}&rdquo;
                 </p>
             </div>
 

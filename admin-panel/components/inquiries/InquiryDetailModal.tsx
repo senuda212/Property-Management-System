@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Mail, Phone, Calendar, Building, CheckCircle, MessageSquare, ExternalLink } from 'lucide-react'
+import { X, Mail, Phone, Building, CheckCircle, MessageSquare, ExternalLink } from 'lucide-react'
 
 interface InquiryDetailModalProps {
     inquiry: any
@@ -37,7 +37,7 @@ export default function InquiryDetailModal({ inquiry, isOpen, onClose, onUpdateS
                                 <h3 className="text-xl font-serif font-bold text-dark-blue">Inquiry Details</h3>
                                 <p className="text-xs text-grey-mid">Received on {new Date(inquiry.createdAt).toLocaleString()}</p>
                             </div>
-                            <button onClick={onClose} className="p-2 hover:bg-grey-light rounded-full transition-colors">
+                            <button onClick={onClose} aria-label="Close" className="p-2 hover:bg-grey-light rounded-full transition-colors">
                                 <X size={24} className="text-grey-dark" />
                             </button>
                         </div>
@@ -93,7 +93,7 @@ export default function InquiryDetailModal({ inquiry, isOpen, onClose, onUpdateS
                                     Client Message
                                 </p>
                                 <div className="text-grey-dark leading-relaxed whitespace-pre-wrap italic">
-                                    "{inquiry.message}"
+                                    &ldquo;{inquiry.message}&rdquo;
                                 </div>
                             </div>
 

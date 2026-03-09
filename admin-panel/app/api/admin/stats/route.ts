@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma'
-import { NextResponse, NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/apiAuth'
 
-export async function GET(req: NextRequest) {
-    const { user, error } = await requireAuth()
+export async function GET() {
+    const { error } = await requireAuth()
     if (error) return error
 
     try {
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
             featuredProperties,
             totalUsers
         })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 })
     }
 }

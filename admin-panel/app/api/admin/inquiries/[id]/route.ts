@@ -17,7 +17,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         await logActivity(req, Number(user.id), user.username, 'UPDATE_INQUIRY', `Marked inquiry from ${inquiry.fullName} as ${body.status}`)
 
         return NextResponse.json(inquiry)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to update inquiry' }, { status: 500 })
     }
 }
@@ -42,7 +42,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         }
 
         return NextResponse.json({ message: 'Inquiry deleted' })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to delete inquiry' }, { status: 500 })
     }
 }

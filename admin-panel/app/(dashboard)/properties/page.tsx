@@ -6,7 +6,7 @@ import PropertyTable from '@/components/properties/PropertyTable'
 
 export default function PropertiesListPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-x-hidden w-full max-w-[100vw]">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h1 className="text-xl sm:text-2xl font-serif font-bold text-dark-blue">Properties</h1>
                 <Link

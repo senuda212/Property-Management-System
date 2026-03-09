@@ -21,7 +21,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         await logActivity(req, Number(user.id), user.username, 'UNLOCK_USER', `Unlocked account for: ${targetUser.username}`)
 
         return NextResponse.json({ message: 'Account unlocked successfully' })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to unlock account' }, { status: 500 })
     }
 }

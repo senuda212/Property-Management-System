@@ -76,17 +76,18 @@ export default function Testimonials() {
 
                     {/* Navigation dots */}
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '32px' }}>
-                        <button onClick={() => setCurrent(c => Math.max(0, c - 1))} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
+                        <button aria-label="Previous testimonial" onClick={() => setCurrent(c => Math.max(0, c - 1))} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
                             <ChevronLeft size={18} />
                         </button>
                         {Array(maxIndex + 1).fill(0).map((_, i) => (
                             <button
                                 key={i}
+                                aria-label={`Go to testimonial ${i + 1}`}
                                 onClick={() => setCurrent(i)}
                                 style={{ width: i === current ? '24px' : '8px', height: '8px', borderRadius: '4px', border: 'none', background: i === current ? '#FF6B1A' : 'rgba(255,255,255,0.3)', cursor: 'pointer', transition: 'all 0.3s' }}
                             />
                         ))}
-                        <button onClick={() => setCurrent(c => Math.min(maxIndex, c + 1))} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
+                        <button aria-label="Next testimonial" onClick={() => setCurrent(c => Math.min(maxIndex, c + 1))} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white' }}>
                             <ChevronRight size={18} />
                         </button>
                     </div>

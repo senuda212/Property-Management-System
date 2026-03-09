@@ -4,17 +4,12 @@ import { useState } from 'react'
 import {
     Building2,
     Globe,
-    Lock,
-    Bell,
     Save,
     Facebook,
     Instagram,
     Linkedin,
-    Youtube,
     AlertTriangle,
-    Mail,
     Phone,
-    Clock,
     MapPin
 } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -62,25 +57,25 @@ export default function SettingsPage() {
                     <div className="space-y-4">
                         <div>
                             <label className="block text-xs font-bold text-grey-mid uppercase tracking-widest mb-1">Company Name</label>
-                            <input type="text" defaultValue="Ceylon Roots Holdings" className="w-full bg-off-white border border-grey-light rounded-xl py-3 px-4 focus:outline-none focus:border-dark-blue" />
+                            <input type="text" aria-label="Company name" defaultValue="Ceylon Roots Holdings" className="w-full bg-off-white border border-grey-light rounded-xl py-3 px-4 focus:outline-none focus:border-dark-blue" />
                         </div>
                         <div>
                             <label className="block text-xs font-bold text-grey-mid uppercase tracking-widest mb-1">Tagline</label>
-                            <input type="text" defaultValue="Rooting For You" className="w-full bg-off-white border border-grey-light rounded-xl py-3 px-4 focus:outline-none focus:border-dark-blue" />
+                            <input type="text" aria-label="Tagline" defaultValue="Rooting For You" className="w-full bg-off-white border border-grey-light rounded-xl py-3 px-4 focus:outline-none focus:border-dark-blue" />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-xs font-bold text-grey-mid uppercase tracking-widest mb-1">Phone</label>
                                 <div className="relative">
                                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-grey-mid" size={16} />
-                                    <input type="text" defaultValue="+94 77 123 4567" className="w-full bg-off-white border border-grey-light rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue" />
+                                    <input type="text" aria-label="Phone number" defaultValue="+94 77 123 4567" className="w-full bg-off-white border border-grey-light rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue" />
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-grey-mid uppercase tracking-widest mb-1">WhatsApp</label>
                                 <div className="relative">
                                     <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-grey-mid" size={16} />
-                                    <input type="text" defaultValue="+94 77 123 4567" className="w-full bg-off-white border border-grey-light rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue" />
+                                    <input type="text" aria-label="WhatsApp number" defaultValue="+94 77 123 4567" className="w-full bg-off-white border border-grey-light rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue" />
                                 </div>
                             </div>
                         </div>
@@ -88,7 +83,7 @@ export default function SettingsPage() {
                             <label className="block text-xs font-bold text-grey-mid uppercase tracking-widest mb-1">Office Address</label>
                             <div className="relative">
                                 <MapPin className="absolute left-3 top-4 text-grey-mid" size={16} />
-                                <textarea rows={3} defaultValue="123 Galle Road, Colombo 03, Sri Lanka" className="w-full bg-off-white border border-grey-light rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue" />
+                                <textarea rows={3} aria-label="Office address" defaultValue="123 Galle Road, Colombo 03, Sri Lanka" className="w-full bg-off-white border border-grey-light rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue" />
                             </div>
                         </div>
                     </div>

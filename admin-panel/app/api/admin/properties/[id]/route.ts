@@ -4,7 +4,7 @@ import { requireAuth, logActivity } from '@/lib/apiAuth'
 import { sanitizeObject } from '@/lib/sanitize'
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const { user, error } = await requireAuth('VIEW_PROPERTIES')
+    const { error } = await requireAuth('VIEW_PROPERTIES')
     if (error) return error
 
     try {
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             images: JSON.parse(property.images || '[]'),
             features: JSON.parse(property.features || '[]'),
         })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to fetch property' }, { status: 500 })
     }
 }
@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         await logActivity(req, Number(user.id), user.username, 'EDIT_PROPERTY', `Updated: ${property.title}`)
 
         return NextResponse.json(property)
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to update property' }, { status: 500 })
     }
 }
@@ -70,7 +70,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         }
 
         return NextResponse.json({ message: 'Property deleted' })
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to delete property' }, { status: 500 })
     }
 }

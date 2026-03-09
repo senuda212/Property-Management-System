@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import SearchBar from '@/components/home/SearchBar'
-import { ChevronDown, MapPin, TrendingUp, Award } from 'lucide-react'
+import { ChevronDown, MapPin, TrendingUp, Award, Users } from 'lucide-react'
 
 const containerVariants = {
     hidden: {},
@@ -89,6 +89,23 @@ export default function HeroSection() {
                 </div>
             </motion.div>
 
+            {/* 1200+ Clients floating badge */}
+            <motion.div
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0, y: [0, -10, 0] }}
+                transition={{ delay: 1.6, duration: 0.6, y: { duration: 4.5, repeat: Infinity, ease: 'easeInOut' } }}
+                style={{ position: 'absolute', left: '8%', top: '65%', backgroundColor: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '16px 24px', backdropFilter: 'blur(12px)', display: 'none', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}
+                className="stat-badge"
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+                    <div style={{ background: 'rgba(34, 197, 94, 0.2)', padding: '8px', borderRadius: '50%', color: '#22C55E' }}><Users size={20} /></div>
+                    <div>
+                        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '24px', fontWeight: 700, color: 'white', lineHeight: 1 }}>1200+</div>
+                        <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '1px' }}>Clients</div>
+                    </div>
+                </div>
+            </motion.div>
+
             {/* Main content */}
             <motion.div
                 variants={containerVariants}
@@ -97,23 +114,23 @@ export default function HeroSection() {
                 style={{ position: 'relative', zIndex: 10, maxWidth: '900px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}
             >
                 <motion.div variants={fadeUp}>
-                    <span style={{ display: 'inline-block', background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.2)', color: '#F8FAFC', padding: '8px 20px', borderRadius: '30px', fontFamily: 'DM Sans, sans-serif', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '24px' }}>
-                        ✨ Premium Real Estate in Sri Lanka
+                    <span style={{ display: 'inline-block', background: 'rgba(255, 107, 26, 0.15)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,107,26,0.35)', color: '#FF6B1A', padding: '8px 20px', borderRadius: '30px', fontFamily: 'DM Sans, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '24px' }}>
+                        OUR STORY
                     </span>
                 </motion.div>
 
                 <motion.h1
                     variants={fadeUp}
-                    style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(42px, 6vw, 84px)', fontWeight: 800, color: 'white', lineHeight: 1.1, marginBottom: '24px', textShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
+                    style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(36px, 6vw, 84px)', fontWeight: 800, color: 'white', lineHeight: 1.1, marginBottom: '24px', textShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
                 >
-                    Find Your <span className="gradient-text-orange">Sanctuary</span> in <br /> The Pearl of the Ocean
+                    Find Your <span className="gradient-text-orange">Perfect Property</span><br /> in Sri Lanka
                 </motion.h1>
 
                 <motion.p
                     variants={fadeUp}
-                    style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 'clamp(16px, 2vw, 20px)', color: '#CBD5E1', marginBottom: '48px', lineHeight: 1.6, maxWidth: '680px', margin: '0 auto 48px' }}
+                    style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 'clamp(16px, 2vw, 20px)', color: '#E8ECF0', marginBottom: '48px', lineHeight: 1.6, maxWidth: '680px', margin: '0 auto 48px' }}
                 >
-                    Discover exclusive properties across Colombo, Galle, Kandy, and beyond. Trusted by thousands to find their perfect home in paradise.
+                    Discover exclusive properties across Colombo, Galle, Kandy, and beyond. Trusted by thousands to find their perfect home in Sri Lanka.
                 </motion.p>
 
                 <motion.div variants={fadeUp} style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
@@ -126,14 +143,14 @@ export default function HeroSection() {
                         className="btn-orange"
                         style={{ padding: '16px 36px', fontSize: '16px', textDecoration: 'none' }}
                     >
-                        Browse Collections
+                        Explore Properties
                     </Link>
                     <Link
                         href="/contact"
                         className="btn-outline-white"
                         style={{ padding: '16px 36px', fontSize: '16px', textDecoration: 'none' }}
                     >
-                        Book Consultation
+                        Contact Us
                     </Link>
                 </motion.div>
             </motion.div>

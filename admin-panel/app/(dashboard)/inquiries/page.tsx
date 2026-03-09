@@ -45,7 +45,7 @@ export default function InquiriesPage() {
                     toast.error(data.error)
                 }
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to load inquiries')
         } finally {
             setIsLoading(false)
@@ -54,6 +54,7 @@ export default function InquiriesPage() {
 
     useEffect(() => {
         fetchInquiries()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters.status])
 
     const updateStatus = async (id: number, status: string) => {
@@ -71,7 +72,7 @@ export default function InquiriesPage() {
                     setSelectedInquiry(prev => prev ? { ...prev, status } : null)
                 }
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to update status')
         }
     }
