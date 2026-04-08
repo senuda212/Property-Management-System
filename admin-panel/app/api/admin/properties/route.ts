@@ -29,7 +29,8 @@ export async function GET(req: NextRequest) {
 
         const properties = await prisma.property.findMany({
             where,
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            include: { agent: true }
         })
 
         return NextResponse.json(properties)
@@ -44,13 +45,59 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json()
-        const sanitizedData = sanitizeObject(body)
+        const {
+            images,
+            features,
+            agent,
+            agentFullName,
+            agentEmail,
+            agentPhone,
+            agentSpecialization,
+            agentBio,
+            agentIsActive,
+            ...propertyBody
+        } = body
+
+        const agentPayload = agent || {
+            fullName: agentFullName,
+            email: agentEmail,
+            phone: agentPhone,
+            specialization: agentSpecialization,
+            bio: agentBio,
+            isActive: agentIsActive,
+        }
+
+        if (!agentPayload?.fullName || !agentPayload?.email || !agentPayload?.phone) {
+            return NextResponse.json({ error: 'Agent full name, email and phone are required' }, { status: 400 })
+        }
+
+        const linkedAgent = await prisma.propertyAgent.upsert({
+            where: { email: agentPayload.email },
+            update: {
+                fullName: agentPayload.fullName,
+                phone: agentPayload.phone,
+                specialization: agentPayload.specialization || null,
+                bio: agentPayload.bio || null,
+                isActive: agentPayload.isActive !== undefined ? Boolean(agentPayload.isActive) : true,
+            },
+            create: {
+                fullName: agentPayload.fullName,
+                email: agentPayload.email,
+                phone: agentPayload.phone,
+                specialization: agentPayload.specialization || null,
+                bio: agentPayload.bio || null,
+                isActive: agentPayload.isActive !== undefined ? Boolean(agentPayload.isActive) : true,
+            },
+        })
+
+        const sanitizedData = sanitizeObject(propertyBody)
 
         const property = await prisma.property.create({
             data: {
                 ...sanitizedData,
-                images: JSON.stringify(body.images || []),
-                features: JSON.stringify(body.features || []),
+                agentId: linkedAgent.id,
+                images: JSON.stringify(images || []),
+                features: JSON.stringify(features || []),
             }
         })
 

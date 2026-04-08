@@ -24,7 +24,8 @@ export async function GET(req: NextRequest) {
 
         const inquiries = await prisma.inquiry.findMany({
             where,
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            include: { property: true }
         })
 
         return NextResponse.json(inquiries)

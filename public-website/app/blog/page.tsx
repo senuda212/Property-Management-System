@@ -36,11 +36,11 @@ export default function BlogPage() {
     const [featured, ...rest] = filtered
 
     return (
-        <div style={{ paddingTop: '80px', minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
+        <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
             {/* Hero/Header */}
             <div style={{
                 background: 'linear-gradient(135deg, #0B1F3A 0%, #1A3560 100%)',
-                padding: '64px 24px',
+                padding: '112px 24px 64px',
                 position: 'relative',
                 overflow: 'hidden',
             }}>

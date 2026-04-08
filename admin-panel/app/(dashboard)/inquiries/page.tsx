@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, Loader2, Mail, FileDown } from 'lucide-react'
-import InquiryCard from '@/components/inquiries/InquiryCard'
+import { Search, Loader2, Mail, FileDown, CheckCircle, MessageSquare, Building, Calendar, Eye } from 'lucide-react'
 import InquiryDetailModal from '@/components/inquiries/InquiryDetailModal'
 import toast from 'react-hot-toast'
 
@@ -104,6 +103,19 @@ export default function InquiriesPage() {
         a.click()
     }
 
+    const getStatusClasses = (status: string) => {
+        switch (status) {
+            case 'Unread':
+                return 'bg-brand-orange/10 text-brand-orange border-brand-orange/20'
+            case 'Read':
+                return 'bg-grey-mid/10 text-grey-mid border-grey-mid/20'
+            case 'Responded':
+                return 'bg-success-green/10 text-success-green border-success-green/20'
+            default:
+                return 'bg-grey-light text-grey-dark border-grey-light'
+        }
+    }
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -163,23 +175,106 @@ export default function InquiriesPage() {
                 </div>
             </div>
 
-            {/* Inbox Grid */}
+            {/* Inbox Table */}
             {isLoading ? (
                 <div className="py-20 flex justify-center">
                     <Loader2 className="animate-spin text-brand-orange" size={40} />
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {inquiries.map(inquiry => (
-                        <InquiryCard
-                            key={inquiry.id}
-                            inquiry={inquiry}
-                            onView={handleViewDetails}
-                            onUpdateStatus={updateStatus}
-                        />
-                    ))}
-                    {inquiries.length === 0 && (
-                        <div className="col-span-full py-20 text-center bg-white rounded-xl border border-dashed border-grey-mid/30">
+                <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-grey-light">
+                    {inquiries.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-grey-light table-fixed">
+                                <thead className="bg-off-white">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-grey-mid w-[20%]">Name</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-grey-mid w-[18%]">Contact</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-grey-mid w-[18%]">Property</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-grey-mid w-[15%]">Date</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-grey-mid w-[12%]">Status</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-grey-mid w-[17%]">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-grey-light bg-white">
+                                    {inquiries.map((inquiry) => (
+                                        <tr key={inquiry.id} className="hover:bg-off-white/70 transition-colors">
+                                            <td className="px-4 py-3 align-top">
+                                                <div className="space-y-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-bold text-dark-blue leading-tight">{inquiry.fullName}</span>
+                                                        {inquiry.status === 'Unread' && (
+                                                            <span className="h-2 w-2 rounded-full bg-brand-orange animate-pulse" />
+                                                        )}
+                                                    </div>
+                                                    <p className="text-xs text-grey-mid truncate max-w-[220px]">{inquiry.message}</p>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 align-top text-sm">
+                                                <div className="space-y-1">
+                                                    <a href={`mailto:${inquiry.email}`} className="block text-brand-orange hover:underline truncate max-w-[180px]">
+                                                        {inquiry.email}
+                                                    </a>
+                                                    <a href={`tel:${inquiry.phone}`} className="block text-grey-dark hover:underline truncate max-w-[180px]">
+                                                        {inquiry.phone}
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 align-top text-sm text-grey-dark">
+                                                <div className="flex items-start gap-2">
+                                                    <Building size={14} className="mt-0.5 shrink-0 text-brand-orange" />
+                                                    <span className="truncate max-w-[220px]">{inquiry.propertyTitle || 'General Inquiry'}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 align-top text-sm text-grey-dark">
+                                                <div className="flex items-center gap-2">
+                                                    <Calendar size={14} className="text-grey-mid shrink-0" />
+                                                    <span>{new Date(inquiry.createdAt).toLocaleDateString()}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${getStatusClasses(inquiry.status)}`}>
+                                                    {inquiry.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <div className="flex flex-wrap gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleViewDetails(inquiry.id)}
+                                                        className="inline-flex items-center gap-1.5 rounded-lg border border-dark-blue px-2.5 py-1.5 text-xs font-bold text-dark-blue hover:bg-dark-blue hover:text-white transition-colors"
+                                                    >
+                                                        <Eye size={13} />
+                                                        View
+                                                    </button>
+                                                    {inquiry.status === 'Unread' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => updateStatus(inquiry.id, 'Read')}
+                                                            className="inline-flex items-center gap-1.5 rounded-lg border border-grey-light px-2.5 py-1.5 text-xs font-bold text-grey-dark hover:bg-grey-light transition-colors"
+                                                        >
+                                                            <CheckCircle size={13} />
+                                                            Read
+                                                        </button>
+                                                    )}
+                                                    {inquiry.status !== 'Responded' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => updateStatus(inquiry.id, 'Responded')}
+                                                            className="inline-flex items-center gap-1.5 rounded-lg border border-success-green/20 bg-success-green/10 px-2.5 py-1.5 text-xs font-bold text-success-green hover:bg-success-green hover:text-white transition-colors"
+                                                        >
+                                                            <MessageSquare size={13} />
+                                                            Reply
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <div className="py-20 text-center">
                             <Mail className="mx-auto mb-4 opacity-10" size={60} />
                             <p className="text-grey-mid font-medium">No inquiries found in your inbox.</p>
                         </div>

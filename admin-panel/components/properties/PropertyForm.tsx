@@ -46,6 +46,12 @@ const propertySchema = z.object({
     district: z.string().min(1, 'District is required'),
     latitude: z.coerce.number().nullable().optional(),
     longitude: z.coerce.number().nullable().optional(),
+    agentFullName: z.string().min(2, 'Agent full name is required'),
+    agentEmail: z.string().email('Valid agent email is required'),
+    agentPhone: z.string().min(7, 'Agent phone number is required'),
+    agentSpecialization: z.string().optional(),
+    agentBio: z.string().optional(),
+    agentIsActive: z.boolean().default(true),
     images: z.array(z.string()).min(1, 'At least one image is required'),
     features: z.array(z.string()).default([]),
     isActive: z.boolean().default(true),
@@ -89,6 +95,12 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
             district: initialData.district || '',
             latitude: initialData.latitude ?? null,
             longitude: initialData.longitude ?? null,
+            agentFullName: initialData.agent?.fullName || '',
+            agentEmail: initialData.agent?.email || '',
+            agentPhone: initialData.agent?.phone || '',
+            agentSpecialization: initialData.agent?.specialization || '',
+            agentBio: initialData.agent?.bio || '',
+            agentIsActive: initialData.agent?.isActive !== undefined ? Boolean(initialData.agent.isActive) : true,
             images: initialData.images || [],
             features: initialData.features || [],
             isActive: initialData.isActive !== undefined ? Boolean(initialData.isActive) : true,
@@ -104,6 +116,12 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
             city: '',
             district: '',
             parking: false,
+            agentFullName: '',
+            agentEmail: '',
+            agentPhone: '',
+            agentSpecialization: '',
+            agentBio: '',
+            agentIsActive: true,
             isActive: true,
             isFeatured: false,
             images: [],
@@ -140,11 +158,22 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
         try {
             const url = id ? `/api/admin/properties/${id}` : '/api/admin/properties'
             const method = id ? 'PUT' : 'POST'
+            const payload = {
+                ...data,
+                agent: {
+                    fullName: data.agentFullName,
+                    email: data.agentEmail,
+                    phone: data.agentPhone,
+                    specialization: data.agentSpecialization || null,
+                    bio: data.agentBio || null,
+                    isActive: data.agentIsActive,
+                },
+            }
 
             const res = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: JSON.stringify(payload),
             })
 
             if (res.ok) {
@@ -364,6 +393,72 @@ export default function PropertyForm({ initialData, id }: PropertyFormProps) {
                                     placeholder="e.g. Colombo"
                                 />
                                 {errors.district && <p className="text-danger-red text-xs mt-1">{errors.district.message}</p>}
+                            </div>
+                        </div>
+
+                        <div className="bg-off-white/50 border border-grey-light rounded-lg p-4 space-y-3">
+                            <p className="text-sm font-semibold text-dark-blue">Agent Information *</p>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-dark-blue mb-1">Agent Full Name *</label>
+                                    <input
+                                        {...register('agentFullName')}
+                                        className={`w-full bg-white border ${errors.agentFullName ? 'border-danger-red' : 'border-grey-light'} rounded-lg py-2 px-4 focus:outline-none focus:border-dark-blue`}
+                                        placeholder="e.g. Kasun Perera"
+                                    />
+                                    {errors.agentFullName && <p className="text-danger-red text-xs mt-1">{errors.agentFullName.message}</p>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-dark-blue mb-1">Agent Email *</label>
+                                    <input
+                                        {...register('agentEmail')}
+                                        type="email"
+                                        className={`w-full bg-white border ${errors.agentEmail ? 'border-danger-red' : 'border-grey-light'} rounded-lg py-2 px-4 focus:outline-none focus:border-dark-blue`}
+                                        placeholder="agent@example.com"
+                                    />
+                                    {errors.agentEmail && <p className="text-danger-red text-xs mt-1">{errors.agentEmail.message}</p>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-dark-blue mb-1">Agent Phone *</label>
+                                    <input
+                                        {...register('agentPhone')}
+                                        className={`w-full bg-white border ${errors.agentPhone ? 'border-danger-red' : 'border-grey-light'} rounded-lg py-2 px-4 focus:outline-none focus:border-dark-blue`}
+                                        placeholder="+94 77 123 4567"
+                                    />
+                                    {errors.agentPhone && <p className="text-danger-red text-xs mt-1">{errors.agentPhone.message}</p>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-dark-blue mb-1">Specialization</label>
+                                    <input
+                                        {...register('agentSpecialization')}
+                                        className="w-full bg-white border border-grey-light rounded-lg py-2 px-4 focus:outline-none focus:border-dark-blue"
+                                        placeholder="Residential, Luxury, Commercial"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-dark-blue mb-1">Agent Bio</label>
+                                <textarea
+                                    {...register('agentBio')}
+                                    rows={2}
+                                    className="w-full bg-white border border-grey-light rounded-lg py-2 px-4 focus:outline-none focus:border-dark-blue"
+                                    placeholder="Short bio about the agent"
+                                />
+                            </div>
+
+                            <div className="flex items-center space-x-3 pt-1">
+                                <input
+                                    type="checkbox"
+                                    id="agentIsActive"
+                                    {...register('agentIsActive')}
+                                    className="h-5 w-5 rounded border-grey-light text-brand-orange focus:ring-brand-orange"
+                                />
+                                <label htmlFor="agentIsActive" className="text-sm font-medium text-dark-blue">Agent is active</label>
                             </div>
                         </div>
 

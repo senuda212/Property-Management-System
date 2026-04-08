@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Home, ChevronRight, Shield, Eye, Star, Zap, Building2, Phone, Mail, Trophy } from 'lucide-react'
+import { Home, ChevronRight, Shield, Eye, Star, Zap, Building2, Trophy } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import CTABanner from '@/components/home/CTABanner'
 
@@ -30,7 +29,6 @@ const awards = [
     { title: '5 Star Service Rating', subtitle: '2023' },
 ]
 export default function AboutPage() {
-    const [showFullStory, setShowFullStory] = useState(false)
     return (
         <div>
             {/* Hero Banner */}
@@ -48,69 +46,74 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Our Story — FIX 8: full redesign desktop + mobile */}
-            <section className="bg-white py-20 max-w-6xl mx-auto px-4 overflow-x-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr] gap-8 lg:gap-12 items-center">
-                    {/* Text column */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -24 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="w-full min-w-0"
-                    >
-                        <div className="mx-4 lg:mx-0 px-6 py-8 lg:p-0 bg-white rounded-xl shadow-sm lg:bg-transparent lg:shadow-none lg:rounded-none">
-                            <p className="text-xs font-semibold uppercase tracking-widest text-[#FF6B1A] mb-2 lg:mb-3" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+            {/* Our Story */}
+            <section style={{ backgroundColor: 'white', padding: '76px 24px' }}>
+                <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+                    <div className="about-story-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)', gap: '44px', alignItems: 'center' }}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.45 }}
+                        >
+                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', fontWeight: 700, letterSpacing: '2px', color: '#FF6B1A', marginBottom: '12px' }}>
                                 OUR STORY
                             </p>
-                            <h2 className="font-serif text-2xl lg:text-3xl font-bold text-[#0B1F3A] mb-3 lg:mb-4 leading-snug" style={{ fontFamily: 'Playfair Display, serif' }}>
+                            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(30px, 3vw, 48px)', fontWeight: 700, color: '#0B1F3A', lineHeight: 1.15, marginBottom: '16px' }}>
                                 Building Trust in Sri Lankan Real Estate
                             </h2>
-                            <div className="text-[#374151] text-base leading-relaxed space-y-4" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-                                <p className={showFullStory ? '' : 'line-clamp-3 lg:line-clamp-none'}>
-                                    Founded in 2014 in Colombo, Ceylon Roots Holdings brings transparency and integrity to Sri Lanka&apos;s property market. We help families and investors find the right home or investment across the island — your trusted partner in real estate.
-                                </p>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setShowFullStory(!showFullStory)}
-                                className="text-[#FF6B1A] font-semibold text-sm underline hover:no-underline mt-2 lg:hidden"
+                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '17px', color: '#334155', lineHeight: 1.75, marginBottom: '26px', maxWidth: '620px' }}>
+                                Founded in 2014 in Colombo, Ceylon Roots Holdings brings transparency and integrity to Sri Lanka&apos;s property market. We help families and investors find the right home or investment across the island.
+                            </p>
+                            <Link
+                                href="/contact"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textDecoration: 'none',
+                                    background: 'linear-gradient(135deg, #FF6B1A 0%, #FF9500 100%)',
+                                    color: 'white',
+                                    fontFamily: 'DM Sans, sans-serif',
+                                    fontSize: '14px',
+                                    fontWeight: 700,
+                                    borderRadius: '999px',
+                                    padding: '12px 24px',
+                                    boxShadow: '0 10px 24px rgba(249, 115, 22, 0.28)',
+                                }}
                             >
-                                {showFullStory ? 'Read Less' : 'Read More'}
-                            </button>
-                            <div className="mt-6">
-                                <Link
-                                    href="/contact"
-                                    className="inline-flex justify-center w-full lg:w-auto bg-gradient-to-r from-[#FF6B1A] to-[#FF9500] text-white px-6 py-3 rounded-full text-sm font-bold no-underline hover:opacity-95 transition-opacity"
-                                    style={{ fontFamily: 'DM Sans, sans-serif' }}
-                                >
-                                    Learn More About Us →
-                                </Link>
-                            </div>
-                        </div>
-                    </motion.div>
+                                Learn More About Us
+                            </Link>
+                        </motion.div>
 
-                    {/* Image card — desktop only, no decorative overlay */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 24 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="hidden lg:block w-full min-w-0"
-                    >
-                        <div className="bg-[#0B1F3A] rounded-2xl shadow-xl flex items-center justify-center p-10 min-h-[320px]">
-                            <div className="text-center">
-                                <Building2 className="mx-auto text-white mb-5" size={64} strokeWidth={1.5} />
-                                <p className="font-serif text-xl font-bold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                    Ceylon Roots Holdings
-                                </p>
-                                <p className="text-sm text-gray-400 mt-2" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-                                    Est. 2014 · Colombo, Sri Lanka
-                                </p>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.45, delay: 0.08 }}
+                        >
+                            <div style={{ background: 'linear-gradient(140deg, #0B1F3A 0%, #102B4E 100%)', borderRadius: '22px', minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '36px', boxShadow: '0 12px 30px rgba(11,31,58,0.2)' }}>
+                                <div style={{ textAlign: 'center' }}>
+                                    <Building2 size={64} color="white" strokeWidth={1.5} style={{ margin: '0 auto 14px' }} />
+                                    <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '38px', fontWeight: 700, color: 'white', marginBottom: '8px', lineHeight: 1.05 }}>
+                                        Ceylon Roots Holdings
+                                    </p>
+                                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '17px', color: '#94A3B8' }}>
+                                        Est. 2014 · Colombo, Sri Lanka
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </div>
+                <style>{`
+                    @media (max-width: 1024px) {
+                        .about-story-grid {
+                            grid-template-columns: 1fr !important;
+                            gap: 28px !important;
+                        }
+                    }
+                `}</style>
             </section>
 
             {/* Values */}
@@ -170,48 +173,6 @@ export default function AboutPage() {
             .timeline-card { width: calc(100% - 64px) !important; }
           }
         `}</style>
-            </section>
-
-            {/* Meet Our Team */}
-            <section style={{ backgroundColor: 'white', padding: '80px 24px' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-                    <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                        <SectionHeading label="OUR PEOPLE" title="Meet Our Team" />
-                    </motion.div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '24px', justifyItems: 'center' }}>
-                        {/* Team Member: Suneth Dewanarayana */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            style={{ backgroundColor: 'white', borderRadius: '20px', padding: '32px 24px', boxShadow: '0 4px 24px rgba(11,31,58,0.08)', border: '1px solid #E8ECF0', textAlign: 'center', width: '100%', maxWidth: '300px' }}
-                        >
-                            {/* SD initials avatar */}
-                            <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(135deg, #0B1F3A, #1A3560)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-                                <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 700, color: 'white' }}>SD</span>
-                            </div>
-                            <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 700, color: '#0B1F3A', marginBottom: '6px' }}>
-                                Suneth Dewanarayana
-                            </h3>
-                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, color: '#FF6B1A', marginBottom: '4px' }}>
-                                Managing Director
-                            </p>
-                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#9AA3AF', marginBottom: '20px' }}>
-                                BBA Sri Lanka
-                            </p>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                <a href="tel:+94777855554" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#4A5568', textDecoration: 'none' }}>
-                                    <Phone size={14} color="#FF6B1A" />
-                                    +94 777 855 554
-                                </a>
-                                <a href="mailto:ceylonrootsh@gmail.com" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#4A5568', textDecoration: 'none', wordBreak: 'break-all' }}>
-                                    <Mail size={14} color="#FF6B1A" />
-                                    ceylonrootsh@gmail.com
-                                </a>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
             </section>
 
             {/* Awards & Recognition */}

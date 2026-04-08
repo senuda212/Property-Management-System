@@ -42,6 +42,9 @@ The customer-facing site for browsing and enquiring about properties.
 | `/` | Home page with hero, featured properties, services, stats, testimonials, blog preview, and CTA |
 | `/properties` | Full property listing with advanced filtering and pagination |
 | `/properties/[id]` | Individual property detail page with gallery and enquiry form |
+| `/blog` | Blog landing page with featured article, search, and category filtering |
+| `/blog/[slug]` | Individual blog article page |
+| `/compare` | Side-by-side comparison view for shortlisted properties |
 | `/about` | About the company |
 | `/contact` | Contact page |
 
@@ -54,6 +57,9 @@ The customer-facing site for browsing and enquiring about properties.
 - **Responsive design** — mobile-friendly layout with collapsible filter bar
 - **Skeleton loading states** — smooth UX while data loads
 - **Interactive map** — Leaflet map integration on property detail pages
+- **Blog system** — searchable articles with categories and featured content
+- **Property comparison** — compare selected properties using a persistent compare bar
+- **External marketplace CTA** — quick access to the official Ikman.lk shop profile from the header
 
 ### API Routes
 
@@ -67,6 +73,8 @@ The customer-facing site for browsing and enquiring about properties.
 ## Admin Panel (`/admin-panel`)
 
 The internal dashboard for managing the platform. Protected by role-based authentication.
+
+Note: Admin login accepts **username or email** plus password.
 
 ### Pages
 
@@ -171,8 +179,6 @@ DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
 DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
 NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:5000"
-ADMIN_USERNAME="admin123"
-ADMIN_PASSWORD="your-admin-password"
 CLOUDINARY_CLOUD_NAME="your-cloud-name"
 CLOUDINARY_API_KEY="your-api-key"
 CLOUDINARY_API_SECRET="your-api-secret"
@@ -180,7 +186,7 @@ CLOUDINARY_API_SECRET="your-api-secret"
 
 ---
 
-## Current Status (March 2026)
+## Current Status (April 2026)
 
 ### Completed
 - [x] Public website — all pages (home, properties, property detail, about, contact)
@@ -194,9 +200,11 @@ CLOUDINARY_API_SECRET="your-api-secret"
 - [x] Rate limiting and input sanitization
 - [x] Migration from SQLite to PostgreSQL
 - [x] Responsive design on public website
+- [x] Blog/news section with article pages and filtering
+- [x] Property detail page map integration (Leaflet)
+- [x] Property comparison workflow (`/compare` + compare bar)
+- [x] Ikman.lk profile CTA integration in website header
 
 ### In Progress / Planned
-- [ ] Property detail page map integration (Leaflet)
 - [ ] Email notifications for new inquiries
 - [ ] Advanced analytics on admin dashboard
-- [ ] Blog / news section

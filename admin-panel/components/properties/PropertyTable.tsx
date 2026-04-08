@@ -12,10 +12,13 @@ import {
     Building2
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import PropertyDetailModal from './PropertyDetailModal'
 
 export default function PropertyTable() {
     const [properties, setProperties] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [selectedProperty, setSelectedProperty] = useState<any>(null)
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
     const [filters, setFilters] = useState({
         search: '',
         type: 'All',
@@ -76,6 +79,22 @@ export default function PropertyTable() {
         } catch {
             toast.error('Failed to update property')
         }
+    }
+
+    const openPropertyDetail = (property: any) => {
+        setSelectedProperty(property)
+        setIsDetailModalOpen(true)
+    }
+
+    const closePropertyDetail = () => {
+        setIsDetailModalOpen(false)
+        setSelectedProperty(null)
+    }
+
+    const handleOpenBuyers = (propertyId: number) => {
+        closePropertyDetail()
+        // Navigate to interested buyers page with property filter
+        window.location.href = `/interested-buyers?propertyId=${propertyId}`
     }
 
     return (
@@ -152,7 +171,7 @@ export default function PropertyTable() {
                                     </td>
                                 </tr>
                             ) : properties.map((prop: any, idx) => (
-                                <tr key={prop.id} className="hover:bg-grey-light/30 transition-colors">
+                                <tr key={prop.id} className="hover:bg-grey-light/30 transition-colors cursor-pointer" onClick={() => openPropertyDetail(prop)}>
                                     <td className="px-6 py-4 text-sm text-grey-mid">{idx + 1}</td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center space-x-3">
@@ -181,16 +200,16 @@ export default function PropertyTable() {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        <div className={`mx-auto h-5 w-10 rounded-full transition-colors cursor-pointer relative ${prop.isActive ? 'bg-success-green' : 'bg-grey-mid'}`}>
+                                        <div className={`mx-auto h-5 w-10 rounded-full transition-colors cursor-pointer relative ${prop.isActive ? 'bg-success-green' : 'bg-grey-mid'}`} onClick={(e) => e.stopPropagation()}>
                                             <div className={`absolute top-1 h-3 w-3 bg-white rounded-full transition-all ${prop.isActive ? 'left-6' : 'left-1'}`} />
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        <button onClick={() => toggleFeatured(prop.id, prop.isFeatured)} aria-label={prop.isFeatured ? 'Remove featured' : 'Mark as featured'}>
+                                        <button onClick={(e) => { e.stopPropagation(); toggleFeatured(prop.id, prop.isFeatured); }} aria-label={prop.isFeatured ? 'Remove featured' : 'Mark as featured'}>
                                             <Star size={18} className={prop.isFeatured ? 'text-warning-yellow fill-warning-yellow' : 'text-grey-mid'} />
                                         </button>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                                         <div className="flex items-center space-x-3">
                                             <Link href={`/properties/${prop.id}/edit`} title="Edit" className="text-mid-blue hover:text-brand-orange transition-colors">
                                                 <Edit size={18} />
@@ -223,7 +242,7 @@ export default function PropertyTable() {
                             <Loader2 className="animate-spin mx-auto text-brand-orange" size={40} />
                         </div>
                     ) : properties.map((prop: any) => (
-                        <div key={prop.id} className="p-4">
+                        <div key={prop.id} className="p-4 cursor-pointer hover:bg-grey-light/30 transition-colors" onClick={() => openPropertyDetail(prop)}>
                             <div className="flex items-center gap-3">
                                 <div className="h-[60px] w-[60px] rounded-l overflow-hidden flex-shrink-0 bg-grey-light">
                                     {JSON.parse(prop.images || '[]')[0] ? (
@@ -245,7 +264,9 @@ export default function PropertyTable() {
                                         </span>
                                         <button
                                             type="button"
-                                            onClick={() => {}}
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                            }}
                                             className="min-h-[44px] min-w-[44px] flex items-center justify-center"
                                             aria-label={prop.isActive ? 'Active' : 'Inactive'}
                                         >
@@ -256,7 +277,7 @@ export default function PropertyTable() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-grey-light w-full">
+                            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-grey-light w-full" onClick={(e) => e.stopPropagation()}>
                                 <Link href={`/properties/${prop.id}/edit`} className="flex-1 min-h-[44px] flex items-center justify-center text-mid-blue hover:text-brand-orange transition-colors font-medium text-sm">
                                     Edit
                                 </Link>
@@ -276,6 +297,14 @@ export default function PropertyTable() {
                     )}
                 </div>
             </div>
+
+            {/* Property Detail Modal */}
+            <PropertyDetailModal 
+                property={selectedProperty}
+                isOpen={isDetailModalOpen}
+                onClose={closePropertyDetail}
+                onOpenBuyers={handleOpenBuyers}
+            />
         </div>
     )
 }

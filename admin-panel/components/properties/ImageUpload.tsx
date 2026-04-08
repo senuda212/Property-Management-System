@@ -147,7 +147,7 @@ export default function ImageUpload({
                 <div
                     {...getRootProps()}
                     className={`
-            relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer
+            relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center cursor-pointer touch-manipulation
             transition-all duration-200
             ${isDragActive
                             ? 'border-brand-orange bg-orange-50 scale-[1.02]'
@@ -169,22 +169,22 @@ export default function ImageUpload({
                         </div>
 
                         <div>
-                            <p className="text-dark-blue font-semibold DM Sans">
+                            <p className="text-dark-blue font-semibold">
                                 {isDragActive
                                     ? 'Drop images here...'
-                                    : 'Drag & drop property images here'
+                                    : 'Tap to browse or drag property images here'
                                 }
                             </p>
                             <p className="text-grey-mid text-sm mt-1">
-                                or <span className="text-brand-orange font-medium">browse from your device</span>
+                                or <span className="text-brand-orange font-medium">choose from your device gallery</span>
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-4 text-xs text-grey-mid">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-grey-mid text-center">
                             <span>JPG, PNG, WebP</span>
-                            <span>•</span>
+                            <span className="hidden sm:inline">•</span>
                             <span>Max 10MB per image</span>
-                            <span>•</span>
+                            <span className="hidden sm:inline">•</span>
                             <span>{value.length}/{maxImages} uploaded</span>
                         </div>
                     </div>
@@ -204,7 +204,7 @@ export default function ImageUpload({
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
                     >
                         {value.map((image, index) => (
                             <motion.div
@@ -212,7 +212,7 @@ export default function ImageUpload({
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
-                                className="relative group aspect-video rounded-lg overflow-hidden bg-grey-light border border-grey-light"
+                                className="image-card relative group aspect-video rounded-lg overflow-hidden bg-grey-light border border-grey-light"
                             >
                                 {/* Cover photo badge */}
                                 {index === 0 && !image.uploading && !image.error && (
@@ -235,6 +235,7 @@ export default function ImageUpload({
                                         <AlertCircle className="w-6 h-6 text-red-300" />
                                         <span className="text-red-200 text-xs text-center">{image.error}</span>
                                         <button
+                                            type="button"
                                             onClick={() => removeImage(index)}
                                             className="text-xs text-white bg-red-600 px-2 py-1 rounded"
                                         >
@@ -256,12 +257,13 @@ export default function ImageUpload({
 
                                 {/* Hover actions */}
                                 {!image.uploading && !image.error && (
-                                    <div className="absolute inset-0 bg-dark-blue/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
+                                    <div className="image-actions absolute inset-0 bg-dark-blue/70 opacity-0 transition-opacity duration-200 flex items-center justify-center gap-2">
                                         {/* Move left */}
                                         {index > 0 && (
                                             <button
+                                                type="button"
                                                 onClick={() => moveImage(index, index - 1)}
-                                                className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xs font-bold transition-colors"
+                                                className="w-10 h-10 sm:w-8 sm:h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xs font-bold transition-colors"
                                                 title="Move left"
                                             >
                                                 ←
@@ -270,8 +272,9 @@ export default function ImageUpload({
 
                                         {/* Remove */}
                                         <button
+                                            type="button"
                                             onClick={() => removeImage(index)}
-                                            className="w-8 h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors"
+                                            className="w-10 h-10 sm:w-8 sm:h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors"
                                             title="Remove image"
                                         >
                                             <X className="w-4 h-4 text-white" />
@@ -280,8 +283,9 @@ export default function ImageUpload({
                                         {/* Move right */}
                                         {index < value.length - 1 && (
                                             <button
+                                                type="button"
                                                 onClick={() => moveImage(index, index + 1)}
-                                                className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xs font-bold transition-colors"
+                                                className="w-10 h-10 sm:w-8 sm:h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xs font-bold transition-colors"
                                                 title="Move right"
                                             >
                                                 →
@@ -303,13 +307,13 @@ export default function ImageUpload({
                         {value.length < maxImages && value.length > 0 && (
                             <div
                                 {...getRootProps()}
-                                className="aspect-video rounded-lg border-2 border-dashed border-grey-light hover:border-brand-orange cursor-pointer flex flex-col items-center justify-center gap-2 transition-colors group"
+                                className="aspect-video rounded-lg border-2 border-dashed border-grey-light hover:border-brand-orange cursor-pointer flex flex-col items-center justify-center gap-2 transition-colors group touch-manipulation"
                             >
                                 <input {...getInputProps()} />
-                                <div className="w-10 h-10 rounded-full bg-grey-light group-hover:bg-orange-100 flex items-center justify-center transition-colors">
+                                <div className="w-12 h-12 rounded-full bg-grey-light group-hover:bg-orange-100 flex items-center justify-center transition-colors">
                                     <Upload className="w-5 h-5 text-grey-mid group-hover:text-brand-orange transition-colors" />
                                 </div>
-                                <span className="text-xs text-grey-mid group-hover:text-brand-orange transition-colors">
+                                <span className="text-xs text-grey-mid group-hover:text-brand-orange transition-colors text-center px-2">
                                     Add more
                                 </span>
                             </div>
@@ -324,6 +328,18 @@ export default function ImageUpload({
                     💡 Drag images to reorder. The first image is the cover photo shown in listings.
                 </p>
             )}
+
+            <style jsx>{`
+                .image-card:hover .image-actions {
+                    opacity: 1;
+                }
+
+                @media (hover: none) {
+                    .image-actions {
+                        opacity: 1 !important;
+                    }
+                }
+            `}</style>
         </div>
     )
 }

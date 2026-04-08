@@ -12,13 +12,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         CredentialsProvider({
             name: 'credentials',
             credentials: {
-                username: { label: 'Username', type: 'text' },
+                username: { label: 'Username or Email', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials, req) {
                 if (!credentials?.username || !credentials?.password) {
-                    throw new Error('Username and password are required')
+                    throw new Error('Username/email and password are required')
                 }
+
+                const identifier = (credentials.username as string).trim().toLowerCase()
 
                 // In NextAuth v5, req is available in authorize.
                 // However, headers are usually accessed via the headers() function from next/headers
@@ -32,14 +34,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 }
 
                 // Find user in database
-                const user = await prisma.user.findUnique({
-                    where: { username: credentials.username as string }
+                const user = await prisma.user.findFirst({
+                    where: {
+                        OR: [
+                            { username: { equals: identifier, mode: 'insensitive' } },
+                            { email: { equals: identifier, mode: 'insensitive' } },
+                        ],
+                    },
                 })
 
                 // Log every login attempt
                 await prisma.loginAttempt.create({
                     data: {
-                        username: credentials.username as string,
+                        username: identifier,
                         ipAddress,
                         success: false, // will update if success
                     }
@@ -173,12 +180,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
     },
     events: {
-        async signOut({ token }) {
-            if (token?.id) {
+        async signOut(message) {
+            if ('token' in message && message.token?.id) {
                 await prisma.activityLog.create({
                     data: {
-                        userId: Number(token.id),
-                        username: token.username as string,
+                        userId: Number(message.token.id),
+                        username: message.token.username as string,
                         action: 'LOGOUT',
                         detail: 'User signed out',
                     }

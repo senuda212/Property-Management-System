@@ -100,7 +100,7 @@ function PropertiesContent() {
     return (
         <>
             {/* Header Banner */}
-            <section style={{ height: '360px', paddingTop: '80px', background: 'linear-gradient(135deg, #0F172A, #1E293B)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <section className="properties-hero" style={{ height: '360px', paddingTop: '80px', background: 'linear-gradient(135deg, #0F172A, #1E293B)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                 <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
                 <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center', marginBottom: '16px' }}>
@@ -117,7 +117,7 @@ function PropertiesContent() {
             </section>
 
             {/* Sticky Filters */}
-            <div style={{ position: 'sticky', top: '72px', zIndex: 40, backgroundColor: 'white', boxShadow: '0 4px 20px rgba(11,31,58,0.1)', padding: '16px 24px' }} className="filters-bar">
+            <div style={{ position: 'sticky', top: '72px', zIndex: 40, backgroundColor: 'white', boxShadow: '0 4px 20px rgba(11,31,58,0.1)', padding: '16px 24px' }} className="filters-bar properties-filters-bar">
                 {/* Mobile-only toggle row */}
                 <div className="filters-mobile-header" style={{ display: 'none', alignItems: 'center', justifyContent: 'space-between' }}>
                     <button
@@ -146,10 +146,10 @@ function PropertiesContent() {
                     <select aria-label="Filter by bedrooms" value={bedrooms} onChange={e => setBedrooms(e.target.value)} style={selectStyle}>
                         {bedroomOptions.map(b => <option key={b}>{b}</option>)}
                     </select>
-                    <button onClick={() => { fetchProperties(); setFiltersOpen(false); }} style={{ background: 'linear-gradient(90deg, #FF6B1A, #FF9500)', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 20px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <button onClick={() => { fetchProperties(); setFiltersOpen(false); }} style={{ background: 'linear-gradient(90deg, #FF6B1A, #FF9500)', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 20px', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', minHeight: '44px' }}>
                         <Search size={16} /> Search
                     </button>
-                    <button onClick={handleReset} style={{ background: 'none', border: 'none', color: '#9AA3AF', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button onClick={handleReset} style={{ background: 'none', border: 'none', color: '#9AA3AF', fontFamily: 'DM Sans, sans-serif', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', minHeight: '44px' }}>
                         <X size={14} /> Reset
                     </button>
                     {!loading && <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#9AA3AF', marginLeft: 'auto' }}>Showing {properties.length} properties</span>}
@@ -157,10 +157,10 @@ function PropertiesContent() {
             </div>
 
             {/* Property Grid */}
-            <section style={{ backgroundColor: '#F5F7FA', padding: '48px 24px 80px', minHeight: '400px' }}>
+            <section className="properties-results" style={{ backgroundColor: '#F5F7FA', padding: '48px 24px 80px', minHeight: '400px' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                     {loading ? (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }} className="properties-grid">
                             {Array(6).fill(0).map((_, i) => <SkeletonCard key={i} />)}
                         </div>
                     ) : error ? (
@@ -183,7 +183,7 @@ function PropertiesContent() {
 
                             {/* Pagination */}
                             {totalPages > 1 && (
-                                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px', flexWrap: 'wrap' }}>
+                                <div className="properties-pagination" style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px', flexWrap: 'wrap' }}>
                                     <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={{ padding: '10px 18px', border: '2px solid #0B1F3A', borderRadius: '8px', background: 'transparent', color: '#0B1F3A', fontFamily: 'DM Sans, sans-serif', fontWeight: 600, cursor: page === 1 ? 'not-allowed' : 'pointer', opacity: page === 1 ? 0.4 : 1 }}>Previous</button>
                                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                                         const p = Math.max(1, Math.min(totalPages - 4, page - 2)) + i
@@ -204,6 +204,15 @@ function PropertiesContent() {
                     .filters-mobile-header { display: flex !important; }
                     .filters-bar {
                         padding: 12px 16px !important;
+                    }
+                    .properties-hero {
+                        height: auto !important;
+                        min-height: 300px !important;
+                        padding-top: 72px !important;
+                        padding-bottom: 48px !important;
+                    }
+                    .properties-hero > div:last-child {
+                        padding: 0 16px !important;
                     }
                     .filters-container {
                         display: none !important;
@@ -232,8 +241,11 @@ function PropertiesContent() {
                         grid-template-columns: 1fr !important;
                         gap: 20px !important;
                     }
-                    section[style*="padding: '48px 24px 80px'"] {
+                    .properties-results {
                         padding: 32px 16px 60px !important;
+                    }
+                    .properties-pagination button {
+                        flex: 1 1 140px;
                     }
                     div[style*="gridTemplateColumns: 'repeat"] {
                         grid-template-columns: 1fr !important;
@@ -242,6 +254,10 @@ function PropertiesContent() {
                 @media (min-width: 769px) and (max-width: 1024px) {
                     .properties-grid {
                         grid-template-columns: repeat(2, 1fr) !important;
+                    }
+                    .properties-results {
+                        padding-left: 20px !important;
+                        padding-right: 20px !important;
                     }
                 }
             `}</style>

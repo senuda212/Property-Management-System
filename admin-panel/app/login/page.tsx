@@ -11,7 +11,7 @@ import * as z from 'zod'
 import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
-    username: z.string().min(1, 'Username is required'),
+    username: z.string().min(1, 'Username or email is required'),
     password: z.string().min(1, 'Password is required'),
 })
 
@@ -40,7 +40,9 @@ export default function LoginPage() {
             })
 
             if (result?.error) {
-                toast.error('Invalid username or password')
+                const raw = decodeURIComponent(result.error)
+                const message = raw === 'CredentialsSignin' ? 'Invalid username/email or password' : raw
+                toast.error(message)
             } else {
                 toast.success('Welcome back, Admin!')
                 router.push('/dashboard')
@@ -80,13 +82,13 @@ export default function LoginPage() {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-dark-blue mb-1">Username</label>
+                        <label className="block text-sm font-medium text-dark-blue mb-1">Username or Email</label>
                         <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 text-grey-mid" size={18} />
                             <input
                                 {...register('username')}
                                 type="text"
-                                placeholder="Enter username"
+                                placeholder="Enter username or email"
                                 className={`w-full bg-off-white border ${errors.username ? 'border-danger-red' : 'border-grey-light'} rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-dark-blue transition-all`}
                             />
                         </div>

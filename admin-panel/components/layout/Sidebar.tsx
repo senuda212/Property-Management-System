@@ -22,7 +22,9 @@ import { useSession } from 'next-auth/react'
 const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/properties', label: 'Properties', icon: Building2 },
+    { href: '/agents', label: 'Agents', icon: Users },
     { href: '/inquiries', label: 'Inquiries', icon: Mail },
+    { href: '/interested-buyers', label: 'Interested Buyers', icon: Mail },
     { href: '/users', label: 'Users', icon: Users, adminOnly: true },
     { href: '/activity-logs', label: 'Activity Logs', icon: ClipboardList, adminOnly: true },
     { href: '/settings', label: 'Settings', icon: Settings },

@@ -21,44 +21,30 @@ interface RowProps {
 
 function CompareRow({ label, values, isBool, highlight }: RowProps) {
     return (
-        <tr style={{ borderBottom: '1px solid #F1F5F9' }}>
-            <td style={{
-                padding: '14px 20px',
-                fontFamily: 'DM Sans, sans-serif',
-                fontSize: '13px',
-                fontWeight: 700,
-                color: '#64748B',
-                backgroundColor: '#F8FAFC',
-                borderRight: '1px solid #E2E8F0',
-                whiteSpace: 'nowrap',
-                minWidth: '140px',
-            }}>
+        <tr className="border-b border-slate-100">
+            <td className="min-w-[140px] whitespace-nowrap border-r border-slate-200 bg-slate-50 px-5 py-[14px] font-['DM_Sans'] text-[13px] font-bold text-slate-500">
                 {label}
             </td>
             {values.map((val, i) => {
                 const cellBg = highlight
-                    ? (i === 0 ? '#FFF7ED' : i === 1 ? '#F0F9FF' : '#F0FDF4')
-                    : 'white'
+                    ? (i === 0 ? 'bg-orange-50' : i === 1 ? 'bg-sky-50' : 'bg-emerald-50')
+                    : 'bg-white'
                 if (isBool) {
                     return (
-                        <td key={i} style={{ padding: '14px 20px', textAlign: 'center', backgroundColor: cellBg }}>
+                        <td key={i} className={`px-5 py-[14px] text-center ${cellBg}`}>
                             {val ? (
-                                <Check size={18} color="#22C55E" style={{ margin: '0 auto' }} />
+                                <Check size={18} className="mx-auto text-green-500" />
                             ) : (
-                                <X size={18} color="#EF4444" style={{ margin: '0 auto' }} />
+                                <X size={18} className="mx-auto text-red-500" />
                             )}
                         </td>
                     )
                 }
                 return (
-                    <td key={i} style={{
-                        padding: '14px 20px',
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontSize: '14px',
-                        color: val != null ? '#0F172A' : '#CBD5E1',
-                        textAlign: 'center',
-                        backgroundColor: cellBg,
-                    }}>
+                    <td
+                        key={i}
+                        className={`px-5 py-[14px] text-center font-['DM_Sans'] text-sm ${val != null ? 'text-slate-900' : 'text-slate-300'} ${cellBg}`}
+                    >
                         {val != null ? String(val) : '—'}
                     </td>
                 )
@@ -72,25 +58,15 @@ export default function ComparePage() {
 
     if (compareList.length === 0) {
         return (
-            <div style={{ paddingTop: '80px', minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '20px', color: '#94A3B8', textAlign: 'center', padding: '40px' }}>
-                <span style={{ fontSize: '64px' }}>⚖️</span>
-                <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', color: '#0B1F3A', margin: 0 }}>No Properties to Compare</h1>
-                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '16px', color: '#64748B', maxWidth: '400px', lineHeight: 1.6 }}>
+            <div className="compare-empty flex min-h-[80vh] flex-col items-center justify-center gap-5 px-10 pb-10 pt-[120px] text-center text-slate-400 max-md:gap-3.5 max-md:px-5 max-md:pb-7 max-md:pt-24">
+                <span className="text-[64px]">⚖️</span>
+                <h1 className="m-0 font-['Playfair_Display'] text-[28px] text-[#0B1F3A]">No Properties to Compare</h1>
+                <p className="max-w-[400px] font-['DM_Sans'] text-base leading-[1.6] text-slate-500">
                     Browse our properties and click the compare button on any listing to add it here.
                 </p>
                 <Link
                     href="/properties"
-                    style={{
-                        display: 'inline-block',
-                        padding: '14px 32px',
-                        background: 'linear-gradient(90deg, #FF6B1A, #FF9500)',
-                        color: 'white',
-                        borderRadius: '10px',
-                        fontFamily: 'DM Sans, sans-serif',
-                        fontSize: '15px',
-                        fontWeight: 700,
-                        textDecoration: 'none',
-                    }}
+                    className="inline-block rounded-[10px] bg-gradient-to-r from-[#FF6B1A] to-[#FF9500] px-8 py-[14px] font-['DM_Sans'] text-[15px] font-bold text-white no-underline"
                 >
                     Browse Properties
                 </Link>
@@ -99,55 +75,40 @@ export default function ComparePage() {
     }
 
     const cols = compareList.length
+    const headerGridClass =
+        cols === 1
+            ? 'grid-cols-[180px_minmax(220px,1fr)]'
+            : cols === 2
+                ? 'grid-cols-[180px_minmax(220px,1fr)_minmax(220px,1fr)]'
+                : cols === 3
+                    ? 'grid-cols-[180px_minmax(220px,1fr)_minmax(220px,1fr)_minmax(220px,1fr)]'
+                    : 'grid-cols-[180px_repeat(4,minmax(220px,1fr))]'
 
     return (
-        <div style={{ paddingTop: '80px', backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
+        <div className="compare-page min-h-screen bg-slate-50 pt-20 max-md:pt-[72px]">
             {/* Header */}
-            <div style={{ background: '#0B1F3A', padding: '40px 24px' }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-                    <Link href="/properties" style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '8px',
-                        color: '#94A3B8', fontFamily: 'DM Sans, sans-serif', fontSize: '14px',
-                        textDecoration: 'none', marginBottom: '20px',
-                    }}>
+            <div className="compare-hero bg-[#0B1F3A] px-6 py-10 max-md:px-4 max-md:py-7">
+                <div className="mx-auto max-w-[1280px]">
+                    <Link href="/properties" className="mb-5 inline-flex items-center gap-2 font-['DM_Sans'] text-sm text-slate-400 no-underline">
                         <ArrowLeft size={16} /> Back to Properties
                     </Link>
-                    <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, color: 'white', margin: '0 0 8px' }}>
+                    <h1 className="mb-2 mt-0 font-['Playfair_Display'] text-[clamp(24px,4vw,36px)] font-bold text-white">
                         Property Comparison
                     </h1>
-                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', color: '#94A3B8', margin: 0 }}>
+                    <p className="m-0 font-['DM_Sans'] text-[15px] text-slate-400">
                         Comparing {cols} {cols === 1 ? 'property' : 'properties'} side by side
                     </p>
                 </div>
             </div>
 
-            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px 24px 80px' }}>
+            <div className="compare-shell mx-auto max-w-[1280px] px-6 pb-20 pt-10 max-md:px-4 max-md:pb-[60px] max-md:pt-6">
                 {/* Property header cards */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: `180px repeat(${cols}, 1fr)`,
-                    gap: '0',
-                    marginBottom: '0',
-                    backgroundColor: 'white',
-                    borderRadius: '16px 16px 0 0',
-                    overflow: 'hidden',
-                    border: '1px solid #E2E8F0',
-                    borderBottom: 'none',
-                }}>
-                    <div style={{ backgroundColor: '#F8FAFC', padding: '20px', borderRight: '1px solid #E2E8F0', display: 'flex', alignItems: 'center' }}>
+                <div className="overflow-x-auto">
+                    <div className={`compare-header-grid grid min-w-max rounded-t-2xl border border-b-0 border-slate-200 bg-white ${headerGridClass} max-md:grid-cols-[140px_repeat(4,minmax(180px,1fr))]`}>
+                        <div className="flex items-center border-r border-slate-200 bg-slate-50 p-5">
                         <button
                             onClick={clearCompare}
-                            style={{
-                                padding: '8px 14px',
-                                background: 'none',
-                                border: '1px solid #E2E8F0',
-                                borderRadius: '8px',
-                                fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#94A3B8',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                            }}
-                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#EF4444'; (e.currentTarget as HTMLButtonElement).style.color = '#EF4444' }}
-                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#E2E8F0'; (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8' }}
+                            className="rounded-lg border border-slate-200 bg-transparent px-[14px] py-2 font-['DM_Sans'] text-[13px] text-slate-400 transition-colors hover:border-red-500 hover:text-red-500"
                         >
                             Clear All
                         </button>
@@ -155,63 +116,50 @@ export default function ComparePage() {
                     {compareList.map((property, i) => {
                         const images = parsePropertyArrayField(property.images)
                         const imageUrl = images[0] || null
-                        const headerBg = i === 0 ? '#FFF7ED' : i === 1 ? '#F0F9FF' : '#F0FDF4'
+                        const headerBg = i === 0 ? 'bg-orange-50' : i === 1 ? 'bg-sky-50' : 'bg-emerald-50'
                         return (
-                            <div key={property.id} style={{ padding: '20px', backgroundColor: headerBg, borderRight: i < cols - 1 ? '1px solid #E2E8F0' : 'none', position: 'relative' }}>
+                            <div
+                                key={property.id}
+                                className={`relative p-5 ${headerBg} ${i < cols - 1 ? 'border-r border-slate-200' : ''}`}
+                            >
                                 {/* Remove button */}
                                 <button
                                     onClick={() => removeFromCompare(property.id)}
                                     aria-label={`Remove ${property.title}`}
-                                    style={{
-                                        position: 'absolute', top: '12px', right: '12px',
-                                        background: 'rgba(0,0,0,0.06)', border: 'none', borderRadius: '50%',
-                                        width: '28px', height: '28px',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        cursor: 'pointer', color: '#64748B', transition: 'all 0.2s',
-                                    }}
-                                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#EF4444'; (e.currentTarget as HTMLButtonElement).style.color = 'white' }}
-                                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(0,0,0,0.06)'; (e.currentTarget as HTMLButtonElement).style.color = '#64748B' }}
+                                    className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border-none bg-black/5 text-slate-500 transition-colors hover:bg-red-500 hover:text-white"
                                 >
                                     <X size={14} />
                                 </button>
 
                                 {/* Property image */}
-                                <div style={{ width: '100%', aspectRatio: '4/3', borderRadius: '10px', overflow: 'hidden', marginBottom: '14px', backgroundColor: '#E2E8F0' }}>
+                                <div className="mb-[14px] aspect-[4/3] w-full overflow-hidden rounded-[10px] bg-slate-200">
                                     {imageUrl ? (
                                         <Image
                                             src={imageUrl}
                                             alt={property.title}
                                             width={400}
                                             height={300}
-                                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                                            className="h-full w-full object-cover"
                                         />
                                     ) : (
-                                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <span style={{ fontSize: '40px' }}>🏠</span>
+                                        <div className="flex h-full w-full items-center justify-center">
+                                            <span className="text-[40px]">🏠</span>
                                         </div>
                                     )}
                                 </div>
 
-                                <h3 style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '15px', fontWeight: 700, color: '#0F172A', margin: '0 0 6px', lineHeight: 1.3 }}>
+                                <h3 className="mb-1.5 mt-0 font-['DM_Sans'] text-[15px] font-bold leading-[1.3] text-slate-900">
                                     {property.title}
                                 </h3>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '12px' }}>
-                                    <MapPin size={13} color="#FF6B1A" />
-                                    <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '13px', color: '#64748B' }}>
+                                <div className="mb-3 flex items-center gap-1">
+                                    <MapPin size={13} className="text-[#FF6B1A]" />
+                                    <span className="font-['DM_Sans'] text-[13px] text-slate-500">
                                         {property.city}, {property.district}
                                     </span>
                                 </div>
                                 <Link
                                     href={`/properties/${property.id}`}
-                                    style={{
-                                        display: 'inline-block',
-                                        padding: '8px 16px',
-                                        background: 'linear-gradient(90deg, #FF6B1A, #FF9500)',
-                                        color: 'white',
-                                        borderRadius: '8px',
-                                        fontFamily: 'DM Sans, sans-serif', fontSize: '13px', fontWeight: 700,
-                                        textDecoration: 'none',
-                                    }}
+                                    className="inline-block rounded-lg bg-gradient-to-r from-[#FF6B1A] to-[#FF9500] px-4 py-2 font-['DM_Sans'] text-[13px] font-bold text-white no-underline"
                                 >
                                     View Listing
                                 </Link>
@@ -219,10 +167,11 @@ export default function ComparePage() {
                         )
                     })}
                 </div>
+                </div>
 
                 {/* Comparison table */}
-                <div style={{ overflowX: 'auto', border: '1px solid #E2E8F0', borderRadius: '0 0 16px 16px', backgroundColor: 'white' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <div className="compare-table-shell overflow-x-auto rounded-b-2xl border border-slate-200 bg-white max-md:rounded-2xl">
+                    <table className="w-full border-collapse">
                         <tbody>
                             <CompareRow
                                 label="Price"
@@ -238,19 +187,19 @@ export default function ComparePage() {
                                 values={compareList.map(p => p.status)}
                             />
                             <CompareRow
-                                label={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Bed size={14} /> Bedrooms</span>}
+                                label={<span className="flex items-center gap-1.5"><Bed size={14} /> Bedrooms</span>}
                                 values={compareList.map(p => p.bedrooms ?? null)}
                             />
                             <CompareRow
-                                label={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Bath size={14} /> Bathrooms</span>}
+                                label={<span className="flex items-center gap-1.5"><Bath size={14} /> Bathrooms</span>}
                                 values={compareList.map(p => p.bathrooms ?? null)}
                             />
                             <CompareRow
-                                label={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Square size={14} /> Sqft</span>}
+                                label={<span className="flex items-center gap-1.5"><Square size={14} /> Sqft</span>}
                                 values={compareList.map(p => p.sqft != null ? p.sqft.toLocaleString() : null)}
                             />
                             <CompareRow
-                                label={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Car size={14} /> Parking</span>}
+                                label={<span className="flex items-center gap-1.5"><Car size={14} /> Parking</span>}
                                 values={compareList.map(p => p.parking)}
                                 isBool
                             />
@@ -273,12 +222,12 @@ export default function ComparePage() {
                     )
                     if (allFeatures.length === 0) return null
                     return (
-                        <div style={{ marginTop: '24px', backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
-                            <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid #F1F5F9' }}>
-                                <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: '#0B1F3A', margin: 0 }}>Features</h3>
+                        <div className="compare-features-shell mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white max-md:rounded-2xl">
+                            <div className="border-b border-slate-100 px-5 pb-4 pt-5">
+                                <h3 className="m-0 font-['Playfair_Display'] text-lg text-[#0B1F3A]">Features</h3>
                             </div>
-                            <div style={{ overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <div className="overflow-x-auto">
+                                <table className="w-full border-collapse">
                                     <tbody>
                                         {allFeatures.map(feature => (
                                             <CompareRow

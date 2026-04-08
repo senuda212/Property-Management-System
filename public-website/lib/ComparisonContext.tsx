@@ -33,17 +33,15 @@ const STORAGE_KEY = 'crh_compare'
 const MAX_COMPARE = 3
 
 export function ComparisonProvider({ children }: { children: ReactNode }) {
-    const [compareList, setCompareList] = useState<CompareProperty[]>([])
-
-    // Hydrate from localStorage on mount
-    useEffect(() => {
+    const [compareList, setCompareList] = useState<CompareProperty[]>(() => {
+        if (typeof window === 'undefined') return []
         try {
             const stored = localStorage.getItem(STORAGE_KEY)
-            if (stored) setCompareList(JSON.parse(stored) as CompareProperty[])
+            return stored ? (JSON.parse(stored) as CompareProperty[]) : []
         } catch {
-            // ignore parse errors
+            return []
         }
-    }, [])
+    })
 
     // Persist to localStorage whenever list changes
     useEffect(() => {

@@ -42,6 +42,7 @@ body {
   font-family: var(--font-sans);
   background-color: var(--background);
   color: var(--foreground);
+  overflow-x: hidden;
 }
 
 h1,
@@ -65,4 +66,42 @@ h6 {
 ::-webkit-scrollbar-thumb {
   background: #FF6B1A;
   border-radius: 3px;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: flex !important;
+  }
+
+  .mobile-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .mobile-full-width {
+    width: 100% !important;
+  }
 }

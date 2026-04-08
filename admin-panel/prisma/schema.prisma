@@ -8,28 +8,31 @@ datasource db {
 }
 
 model Property {
-  id            Int       @id @default(autoincrement())
-  title         String
-  description   String
-  type          String
-  status        String
-  price         Float
-  currency      String    @default("LKR")
-  bedrooms      Int?
-  bathrooms     Int?
-  sqft          Float?
-  parking       Boolean   @default(false)
-  address       String
-  city          String
-  district      String
-  latitude      Float?
-  longitude     Float?
-  images        String
-  features      String
-  isActive      Boolean   @default(true)
-  isFeatured    Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  type        String
+  status      String
+  price       Float
+  currency    String         @default("LKR")
+  bedrooms    Int?
+  bathrooms   Int?
+  sqft        Float?
+  parking     Boolean        @default(false)
+  address     String
+  city        String
+  district    String
+  latitude    Float?
+  longitude   Float?
+  images      String
+  features    String
+  isActive    Boolean        @default(true)
+  isFeatured  Boolean        @default(false)
+  agentId     Int?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  agent       PropertyAgent? @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  inquiries   Inquiry[]
 }
 
 model Inquiry {
@@ -42,56 +45,81 @@ model Inquiry {
   propertyId    Int?
   propertyTitle String?
   status        String    @default("Unread")
+  replied       Boolean   @default(false)
+  repliedAt     DateTime?
   createdAt     DateTime  @default(now())
+  property      Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+}
+
+model PropertyAgent {
+  id             Int        @id @default(autoincrement())
+  fullName       String
+  email          String     @unique
+  phone          String
+  specialization String?
+  bio            String?
+  image          String?
+  isActive       Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  properties     Property[]
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   fullName      String
-  email         String    @unique
-  username      String    @unique
+  email         String        @unique
+  username      String        @unique
   passwordHash  String
-  role          String    @default("employee")
+  role          String        @default("employee")
   // Roles: "admin", "manager", "employee"
-  isActive      Boolean   @default(true)
+  isActive      Boolean       @default(true)
   lastLogin     DateTime?
-  loginAttempts Int       @default(0)
+  loginAttempts Int           @default(0)
   lockedUntil   DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   createdBy     Int?
   sessions      UserSession[]
   activityLogs  ActivityLog[]
 }
 
 model UserSession {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  token       String   @unique
-  ipAddress   String?
-  userAgent   String?
-  expiresAt   DateTime
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ActivityLog {
-  id          Int      @id @default(autoincrement())
-  userId      Int?
-  username    String?
-  action      String
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  username  String?
+  action    String
   // e.g. "LOGIN", "LOGOUT", "ADD_PROPERTY", "DELETE_PROPERTY", "UPDATE_INQUIRY", "ADD_USER", "DELETE_USER"
-  detail      String?
-  ipAddress   String?
-  userAgent   String?
-  createdAt   DateTime @default(now())
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  detail    String?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model LoginAttempt {
-  id          Int      @id @default(autoincrement())
-  username    String
-  ipAddress   String?
-  success     Boolean
-  createdAt   DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  username  String
+  ipAddress String?
+  success   Boolean
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("SiteSetting")
 }

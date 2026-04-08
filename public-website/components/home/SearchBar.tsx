@@ -54,7 +54,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div style={{
+        <div className="property-search-bar" style={{
             background: 'rgba(255,255,255,0.97)',
             borderRadius: '16px',
             padding: '20px 24px',
@@ -106,6 +106,24 @@ export default function SearchBar() {
                 <Search size={18} />
                 Search
             </button>
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .property-search-bar {
+                        padding: 16px !important;
+                        border-radius: 14px !important;
+                    }
+
+                    .property-search-bar select,
+                    .property-search-bar button {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                    }
+
+                    .property-search-bar button {
+                        justify-content: center !important;
+                    }
+                }
+            `}</style>
         </div>
     )
 }

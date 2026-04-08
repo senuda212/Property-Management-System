@@ -3,10 +3,11 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Home, ChevronRight, Phone, Mail, MapPin, Clock, MessageCircle, Facebook, Instagram, Linkedin, Youtube, Send } from 'lucide-react'
 import SectionHeading from '@/components/ui/SectionHeading'
 import FAQAccordion from '@/components/ui/FAQAccordion'
+import { DEFAULT_PUBLIC_CONTACT_SETTINGS } from '@/lib/siteSettings'
 
 interface ContactForm {
     fullName: string
@@ -16,19 +17,51 @@ interface ContactForm {
     message: string
 }
 
-const contactCards = [
-    { icon: Phone, label: 'Phone (WhatsApp)', value: '+94 777 855 554', href: 'tel:+94777855554' },
-    { icon: Phone, label: 'Phone', value: '+94 717 555 572', href: 'tel:+94717555572' },
-    { icon: Mail, label: 'Email', value: 'ceylonrootsh@gmail.com', href: 'mailto:ceylonrootsh@gmail.com' },
-    { icon: MapPin, label: 'Address', value: '231/4, Rosegarden Road, Wattegedara Rd, Maharagama', href: undefined },
-    { icon: Clock, label: 'Hours', value: 'Mon–Fri: 9AM–6PM | Sat: 9AM–3PM | Sun: Closed', href: undefined },
-]
-
 export default function ContactPage() {
+    const [settings, setSettings] = useState(DEFAULT_PUBLIC_CONTACT_SETTINGS)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactForm>()
+
+    useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                const res = await fetch('/api/settings', { cache: 'no-store' })
+                if (!res.ok) return
+
+                const data = await res.json()
+                setSettings((current) => ({
+                    ...current,
+                    ...Object.fromEntries(
+                        Object.entries(data).filter(([, value]) => typeof value === 'string' && value.trim())
+                    ),
+                }))
+            } catch {
+                // Keep fallback value on fetch failure
+            }
+        }
+
+        loadSettings()
+    }, [])
+
+    const contactCards = [
+        { icon: Phone, label: 'Phone (WhatsApp)', value: settings.phonePrimary, href: `tel:${settings.phonePrimary.replace(/\s+/g, '')}` },
+        { icon: Phone, label: 'Phone', value: settings.phoneSecondary, href: `tel:${settings.phoneSecondary.replace(/\s+/g, '')}` },
+        { icon: Mail, label: 'Email', value: settings.email, href: `mailto:${settings.email}` },
+        { icon: MapPin, label: 'Address', value: settings.officeAddress, href: undefined },
+        { icon: Clock, label: 'Hours', value: 'Mon–Fri: 9AM–6PM | Sat: 9AM–3PM | Sun: Closed', href: undefined },
+    ]
+
+    const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(settings.officeAddress)}&z=15&output=embed`
+    const whatsappHref = `https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}`
+
+    const socialLinks = [
+        { icon: Facebook, href: settings.facebookUrl, label: 'Facebook' },
+        { icon: Instagram, href: settings.instagramUrl, label: 'Instagram' },
+        { icon: Linkedin, href: settings.linkedinUrl, label: 'LinkedIn' },
+        { icon: Youtube, href: settings.youtubeUrl, label: 'YouTube' },
+    ]
 
     const onSubmit = async (data: ContactForm) => {
         setSubmitting(true); setError(false)
@@ -52,7 +85,7 @@ export default function ContactPage() {
     return (
         <div>
             {/* Hero */}
-            <section style={{ height: '360px', paddingTop: '80px', background: 'linear-gradient(135deg, #0F172A, #1E293B)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <section className="contact-hero" style={{ height: '360px', paddingTop: '80px', background: 'linear-gradient(135deg, #0F172A, #1E293B)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                 <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
                 <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center', marginBottom: '16px' }}>
@@ -66,7 +99,7 @@ export default function ContactPage() {
             </section>
 
             {/* Contact Layout */}
-            <section style={{ backgroundColor: '#F5F7FA', padding: '64px 24px' }}>
+            <section className="contact-section" style={{ backgroundColor: '#F5F7FA', padding: '64px 24px' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'start' }} className="contact-layout">
                     {/* Left — Form */}
                     <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
@@ -130,45 +163,40 @@ export default function ContactPage() {
                     <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {/* WhatsApp card */}
-                            <div style={{ backgroundColor: '#0B1F3A', borderRadius: '16px', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <div style={{ backgroundColor: '#0B1F3A', borderRadius: '16px', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px' }} className="contact-card">
                                 <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                     <MessageCircle size={22} color="white" />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#9AA3AF', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>WhatsApp</p>
-                                    <a href="https://wa.me/94777855554" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#25D366', fontWeight: 700, textDecoration: 'none' }}>
+                                    <a href={whatsappHref} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#25D366', fontWeight: 700, textDecoration: 'none', wordBreak: 'break-word' }}>
                                         Click to Chat on WhatsApp →
                                     </a>
                                 </div>
                             </div>
 
                             {contactCards.map(({ icon: Icon, label, value, href }) => (
-                                <div key={label} style={{ backgroundColor: '#0B1F3A', borderRadius: '16px', padding: '20px 24px', display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                                <div key={label} style={{ backgroundColor: '#0B1F3A', borderRadius: '16px', padding: '20px 24px', display: 'flex', alignItems: 'flex-start', gap: '16px' }} className="contact-card">
                                     <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(255,107,26,0.2), rgba(255,107,26,0.1))', border: '1px solid rgba(255,107,26,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                         <Icon size={20} color="#FF6B1A" />
                                     </div>
                                     <div>
                                         <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '11px', color: '#9AA3AF', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>{label}</p>
                                         {href ? (
-                                            <a href={href} style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: 'white', textDecoration: 'none' }}>{value}</a>
+                                            <a href={href} style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: 'white', textDecoration: 'none', wordBreak: 'break-word' }}>{value}</a>
                                         ) : (
-                                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: 'white' }}>{value}</p>
+                                            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: 'white', wordBreak: 'break-word' }}>{value}</p>
                                         )}
                                     </div>
                                 </div>
                             ))}
 
                             {/* Social icons */}
-                            <div style={{ backgroundColor: '#0B1F3A', borderRadius: '16px', padding: '20px 24px' }}>
+                            <div style={{ backgroundColor: '#0B1F3A', borderRadius: '16px', padding: '20px 24px' }} className="contact-card">
                                 <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#9AA3AF', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '16px' }}>Follow Us</p>
-                                <div style={{ display: 'flex', gap: '12px' }}>
-                                    {[
-                                        { icon: Facebook, href: '#' },
-                                        { icon: Instagram, href: '#' },
-                                        { icon: Linkedin, href: '#' },
-                                        { icon: Youtube, href: '#' },
-                                    ].map(({ icon: Icon, href }, i) => (
-                                        <a key={i} href={href} style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'linear-gradient(90deg, #FF6B1A, #FF9500)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', textDecoration: 'none' }}
+                                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                                    {socialLinks.map(({ icon: Icon, href, label }) => (
+                                        <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'linear-gradient(90deg, #FF6B1A, #FF9500)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', textDecoration: 'none' }}
                                             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.transform = 'scale(1.12)'}
                                             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.transform = 'scale(1)'}
                                         >
@@ -183,9 +211,9 @@ export default function ContactPage() {
             </section>
 
             {/* Map */}
-            <section>
+            <section className="contact-map-section">
                 <iframe
-                    src="https://maps.google.com/maps?q=231/4+Rosegarden+Road+Wattegedara+Rd+Maharagama&z=15&output=embed"
+                    src={mapSrc}
                     width="100%"
                     height="400"
                     style={{ border: 0, display: 'block' }}
@@ -196,7 +224,7 @@ export default function ContactPage() {
             </section>
 
             {/* FAQ */}
-            <section style={{ backgroundColor: '#F5F7FA', padding: '80px 24px' }}>
+            <section className="contact-faq-section" style={{ backgroundColor: '#F5F7FA', padding: '80px 24px' }}>
                 <div style={{ maxWidth: '860px', margin: '0 auto' }}>
                     <SectionHeading label="FAQ" title="Frequently Asked Questions" subtitle="Everything you need to know about working with us" />
                     <FAQAccordion />
@@ -208,11 +236,30 @@ export default function ContactPage() {
                         grid-template-columns: 1fr !important;
                         gap: 32px !important;
                     }
-                    section[style*="padding: 64px 24px"] {
+                    .contact-section {
                         padding: 48px 16px !important;
                     }
-                    section iframe {
+                    .contact-hero {
+                        height: auto !important;
+                        min-height: 300px !important;
+                        padding-top: 72px !important;
+                        padding-bottom: 44px !important;
+                    }
+                    .contact-hero > div:last-child {
+                        padding: 0 16px !important;
+                    }
+                    .contact-card {
+                        padding: 18px 16px !important;
+                    }
+                    .contact-card a,
+                    .contact-card p {
+                        overflow-wrap: anywhere;
+                    }
+                    .contact-map-section iframe {
                         height: 250px !important;
+                    }
+                    .contact-faq-section {
+                        padding: 60px 16px !important;
                     }
                 }
             `}</style>

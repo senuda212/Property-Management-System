@@ -22,6 +22,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format } from 'date-fns'
+import { Role } from '@/lib/permissions'
 
 const userSchema = z.object({
     fullName: z.string().min(3, 'Full name must be at least 3 characters'),
@@ -39,7 +40,7 @@ interface User {
     fullName: string
     email: string
     username: string
-    role: string
+    role: Role
     isActive: boolean
     lastLogin?: string | null
     loginAttempts: number
@@ -336,7 +337,7 @@ function StatusBadge({ user }: { user: User }) {
     return <span className="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Inactive</span>
 }
 
-function getAvatarColor(role: string) {
+function getAvatarColor(role: Role) {
     if (role === 'admin') return 'bg-dark-blue'
     if (role === 'manager') return 'bg-orange'
     return 'bg-grey-mid'

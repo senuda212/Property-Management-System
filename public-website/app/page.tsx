@@ -1,6 +1,5 @@
 import HeroSection from '@/components/home/HeroSection'
 import FeaturedProperties from '@/components/home/FeaturedProperties'
-import DistrictMap from '@/components/home/DistrictMap'
 import StatsBanner from '@/components/home/StatsBanner'
 import ServicesOverview from '@/components/home/ServicesOverview'
 import Testimonials from '@/components/home/Testimonials'
@@ -12,7 +11,6 @@ export default function HomePage() {
     <>
       <HeroSection />
       <FeaturedProperties />
-      <DistrictMap />
       <StatsBanner />
       <ServicesOverview />
       <Testimonials />

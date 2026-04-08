@@ -81,7 +81,7 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
     return (
         <div className="space-y-4">
             <div
-                className={`relative border-2 border-dashed rounded-xl p-8 transition-all flex flex-col items-center justify-center text-center cursor-pointer
+                className={`relative border-2 border-dashed rounded-xl p-6 sm:p-8 transition-all flex flex-col items-center justify-center text-center cursor-pointer touch-manipulation
                     ${dragActive ? 'border-brand-orange bg-brand-orange/5' : 'border-grey-light hover:border-brand-orange/50 hover:bg-off-white'}
                     ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onDragOver={onDragOver}
@@ -121,12 +121,12 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
             </div>
 
             {value.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {value.map((url, index) => (
                         <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border border-grey-light shadow-sm">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={url} alt={`Property ${index + 1}`} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <div className="absolute inset-0 bg-black/40 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <button
                                     type="button"
                                     aria-label={`Remove image ${index + 1}`}
@@ -148,7 +148,7 @@ export default function ImageUpload({ value, onChange, maxImages = 10 }: ImageUp
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="aspect-square rounded-lg border-2 border-dashed border-grey-light flex flex-col items-center justify-center text-grey-mid hover:border-brand-orange hover:text-brand-orange transition-all bg-off-white/50"
+                            className="aspect-square rounded-lg border-2 border-dashed border-grey-light flex flex-col items-center justify-center text-grey-mid hover:border-brand-orange hover:text-brand-orange transition-all bg-off-white/50 touch-manipulation"
                         >
                             <Plus size={24} />
                             <span className="text-[10px] font-bold mt-1 uppercase">Add More</span>

@@ -59,8 +59,15 @@ export async function POST(req: NextRequest) {
             ],
           },
           (error, result) => {
-            if (error) reject(error)
-            else resolve(result)
+            if (error) {
+              reject(error)
+              return
+            }
+            if (!result) {
+              reject(new Error('Upload failed: no result returned from Cloudinary'))
+              return
+            }
+            resolve(result)
           }
         )
         .end(buffer)

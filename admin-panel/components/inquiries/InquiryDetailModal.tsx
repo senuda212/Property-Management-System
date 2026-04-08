@@ -1,7 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Mail, Phone, Building, CheckCircle, MessageSquare, ExternalLink } from 'lucide-react'
+import { X, Mail, Phone, Building, CheckCircle, MessageSquare, ExternalLink, Loader2 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface InquiryDetailModalProps {
     inquiry: any
@@ -11,7 +13,31 @@ interface InquiryDetailModalProps {
 }
 
 export default function InquiryDetailModal({ inquiry, isOpen, onClose, onUpdateStatus }: InquiryDetailModalProps) {
+    const [isUpdatingReply, setIsUpdatingReply] = useState(false)
+
     if (!inquiry) return null
+
+    const handleMarkReplied = async () => {
+        setIsUpdatingReply(true)
+        try {
+            const res = await fetch(`/api/admin/inquiries/${inquiry.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ replied: true, repliedAt: new Date().toISOString() })
+            })
+
+            if (res.ok) {
+                toast.success('Marked as replied')
+                onUpdateStatus(inquiry.id, 'Responded')
+            } else {
+                toast.error('Failed to update status')
+            }
+        } catch {
+            toast.error('Failed to update status')
+        } finally {
+            setIsUpdatingReply(false)
+        }
+    }
 
     return (
         <AnimatePresence>
@@ -83,6 +109,20 @@ export default function InquiryDetailModal({ inquiry, isOpen, onClose, onUpdateS
                                             {inquiry.status}
                                         </span>
                                     </div>
+                                    {inquiry.replied && (
+                                        <div>
+                                            <p className="text-[10px] uppercase font-bold text-grey-mid tracking-widest mb-1">Reply Status</p>
+                                            <div className="flex items-center gap-2">
+                                                <CheckCircle size={16} className="text-success-green fill-success-green" />
+                                                <span className="text-sm font-bold text-success-green">Replied</span>
+                                            </div>
+                                            {inquiry.repliedAt && (
+                                                <p className="text-xs text-grey-mid mt-1">
+                                                    {new Date(inquiry.repliedAt).toLocaleDateString()}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -118,7 +158,7 @@ export default function InquiryDetailModal({ inquiry, isOpen, onClose, onUpdateS
                         </div>
 
                         {/* Footer Actions */}
-                        <div className="p-6 bg-off-white flex justify-between gap-4">
+                        <div className="p-6 bg-off-white flex justify-between gap-4 flex-wrap">
                             <div className="flex gap-2">
                                 {inquiry.status !== 'Read' && (
                                     <button
@@ -129,20 +169,21 @@ export default function InquiryDetailModal({ inquiry, isOpen, onClose, onUpdateS
                                         Mark as Read
                                     </button>
                                 )}
-                                {inquiry.status !== 'Responded' && (
+                                {!inquiry.replied && (
                                     <button
-                                        onClick={() => onUpdateStatus(inquiry.id, 'Responded')}
-                                        className="text-xs font-bold text-success-green hover:underline flex items-center"
+                                        onClick={handleMarkReplied}
+                                        disabled={isUpdatingReply}
+                                        className="text-xs font-bold text-success-green hover:underline flex items-center disabled:opacity-50"
                                     >
+                                        {isUpdatingReply && <Loader2 size={12} className="mr-1 animate-spin" />}
                                         <CheckCircle size={14} className="mr-1" />
-                                        Mark as Responded
+                                        Mark as Replied
                                     </button>
                                 )}
                             </div>
                             <button
                                 onClick={onClose}
                                 className="text-xs font-bold text-grey-mid hover:text-danger-red transition-colors"
-                                title="Only admin can delete"
                             >
                                 Close Details
                             </button>
