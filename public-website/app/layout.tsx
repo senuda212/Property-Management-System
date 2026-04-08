@@ -3,6 +3,8 @@ import { Playfair_Display, DM_Sans } from "next/font/google"; // [NEW]
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { ComparisonProvider } from "@/lib/ComparisonContext";
+import CompareBar from "@/components/properties/CompareBar";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -30,9 +32,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <ComparisonProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <CompareBar />
+        </ComparisonProvider>
       </body>
     </html>
   );

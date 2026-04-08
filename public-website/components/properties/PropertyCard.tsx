@@ -4,8 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight } from 'lucide-react'
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight, BarChart3 } from 'lucide-react'
 import { parsePropertyArrayField } from '@/lib/parseProperty'
+import { useComparison } from '@/lib/ComparisonContext'
 
 interface Property {
     id: number
@@ -40,6 +41,9 @@ function formatPrice(price: number): string {
 
 export default function PropertyCard({ property, index = 0 }: PropertyCardProps) {
     const [saved, setSaved] = useState(false)
+    const { addToCompare, removeFromCompare, isCompared, compareList } = useComparison()
+    const compared = isCompared(property.id)
+    const compareDisabled = !compared && compareList.length >= 3
     const safeImages = parsePropertyArrayField(property.images)
     const imageUrl = safeImages[0] || null
 
@@ -141,9 +145,55 @@ export default function PropertyCard({ property, index = 0 }: PropertyCardProps)
                 </div>
 
                 <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#94A3B8', fontWeight: 500 }}>
-                        {property.type}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '12px', color: '#94A3B8', fontWeight: 500 }}>
+                            {property.type}
+                        </span>
+                        {/* Compare toggle */}
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault()
+                                if (compared) {
+                                    removeFromCompare(property.id)
+                                } else if (!compareDisabled) {
+                                    addToCompare({
+                                        id: property.id,
+                                        title: property.title,
+                                        type: property.type,
+                                        status: property.status,
+                                        price: property.price,
+                                        currency: property.currency,
+                                        bedrooms: property.bedrooms,
+                                        bathrooms: property.bathrooms,
+                                        sqft: property.sqft,
+                                        parking: property.parking,
+                                        city: property.city,
+                                        district: property.district,
+                                        images: property.images,
+                                        features: property.features,
+                                    })
+                                }
+                            }}
+                            disabled={compareDisabled}
+                            aria-label={compared ? 'Remove from compare' : 'Add to compare'}
+                            title={compareDisabled ? 'Max 3 properties can be compared' : compared ? 'Remove from compare' : 'Add to compare'}
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: '4px',
+                                padding: '4px 10px',
+                                background: compared ? '#EFF6FF' : 'transparent',
+                                border: `1px solid ${compared ? '#3B82F6' : '#E2E8F0'}`,
+                                borderRadius: '6px',
+                                color: compared ? '#2563EB' : compareDisabled ? '#CBD5E1' : '#64748B',
+                                fontFamily: 'DM Sans, sans-serif', fontSize: '11px', fontWeight: 600,
+                                cursor: compareDisabled ? 'not-allowed' : 'pointer',
+                                transition: 'all 0.2s',
+                                opacity: compareDisabled ? 0.5 : 1,
+                            }}
+                        >
+                            <BarChart3 size={12} />
+                            {compared ? 'Added' : 'Compare'}
+                        </button>
+                    </div>
                     <Link
                         href={`/properties/${property.id}`}
                         style={{

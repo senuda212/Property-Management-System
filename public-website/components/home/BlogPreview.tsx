@@ -49,9 +49,9 @@ export default function BlogPreview() {
                                 <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', color: '#4A5568', lineHeight: 1.6, marginBottom: '16px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                     {post.excerpt}
                                 </p>
-                                <a href="#" style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, color: '#FF6B1A', textDecoration: 'none' }}>
+                                <Link href={`/blog/${post.slug}`} style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '14px', fontWeight: 700, color: '#FF6B1A', textDecoration: 'none' }}>
                                     Read More →
-                                </a>
+                                </Link>
                             </div>
                         </motion.div>
                     ))}
@@ -59,7 +59,7 @@ export default function BlogPreview() {
 
                 <div style={{ textAlign: 'center', marginTop: '48px' }}>
                     <Link
-                        href="#"
+                        href="/blog"
                         style={{ display: 'inline-block', padding: '14px 36px', border: '2px solid #0B1F3A', borderRadius: '8px', fontFamily: 'DM Sans, sans-serif', fontSize: '15px', fontWeight: 700, color: '#0B1F3A', textDecoration: 'none', transition: 'all 0.3s' }}
                         onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#0B1F3A'; (e.currentTarget as HTMLAnchorElement).style.color = 'white' }}
                         onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLAnchorElement).style.color = '#0B1F3A' }}

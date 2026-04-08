@@ -11,11 +11,13 @@ export async function GET(request: NextRequest) {
         const maxPrice = searchParams.get('maxPrice')
         const bedrooms = searchParams.get('bedrooms')
         const featured = searchParams.get('featured')
+        const district = searchParams.get('district')
 
         const where: Record<string, unknown> = { isActive: true }
         if (type && type !== 'All Types') where.type = type
         if (status && status !== 'All') where.status = status
         if (city && city !== 'All Locations') where.city = city
+        if (district) where.district = district
         if (featured === 'true') where.isFeatured = true
         if (minPrice || maxPrice) {
             where.price = {}

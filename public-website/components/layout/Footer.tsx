@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Facebook, Instagram, Linkedin, MessageCircle, Phone, Mail, MapPin, Youtube } from 'lucide-react'
 
-const quickLinks = ['Home', 'Properties', 'About Us', 'Contact Us']
-const quickHrefs = ['/', '/properties', '/about', '/contact']
+const quickLinks = ['Home', 'Properties', 'Blog', 'About Us', 'Contact Us']
+const quickHrefs = ['/', '/properties', '/blog', '/about', '/contact']
 
 const services = [
     'Real Estate',
